@@ -1,11 +1,18 @@
+
+
 p {
-
-    color: green;
-
+    color: black;
+    font-size: 20px;
+    margin: 0px;
 }
 
 h1 {
-    color:orange;
+    color:azure;
+}
+
+/* Empty Spacing */
+.emptyDiv {
+    height: 30px;
 }
 
 .divvy {
@@ -22,3 +29,30 @@ h1 {
 button{
     color: red;
 }
+
+/* Multicolor bar at top */
+.css-1dp5vir{
+    background-image: linear-gradient(90deg, hsl(165, 70%, 42%), hsl(165, 70%, 42%));
+}
+
+/* Header */
+.css-18ni7ap{
+    background-color: hsl(165, 70%, 42%);
+}
+
+/* Background Body */
+.css-fg4pbf{
+    background-color: hsl(165, 70%, 42%);
+}
+
+/* Nav bar */
+.css-10xlvwk{
+    background-color:hsla(192, 100%, 97%, 0.664);
+}
+
+/* Nav bar pages font */
+.css-uc76bn {
+    color: black;
+    font-size: 26px;
+}
+
