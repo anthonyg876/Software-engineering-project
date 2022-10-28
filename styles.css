@@ -10,6 +10,13 @@ h1 {
     color:azure;
 }
 
+/* Text of profile information */
+.profile-info{
+
+    font-style:italic;
+
+}
+
 /* Empty Spacing */
 .emptyDiv {
     height: 30px;
@@ -54,5 +61,12 @@ button{
 .css-uc76bn {
     color: black;
     font-size: 26px;
+}
+
+/* Tabs for login */
+.st-ch {
+    font-size: 26px;
+    margin-left: 14px;
+    margin-right: 14px;
 }
 
