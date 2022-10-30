@@ -1,7 +1,5 @@
 
-
 p {
-    color: black;
     font-size: 20px;
     margin: 0px;
 }
@@ -42,25 +40,10 @@ button{
     background-image: linear-gradient(90deg, hsl(165, 70%, 42%), hsl(165, 70%, 42%));
 }
 
-/* Header */
-.css-18ni7ap{
-    background-color: hsl(165, 70%, 42%);
-}
-
-/* Background Body */
-.css-fg4pbf{
-    background-color: hsl(165, 70%, 42%);
-}
-
-/* Nav bar */
-.css-10xlvwk{
-    background-color:hsla(192, 100%, 97%, 0.664);
-}
-
 /* Nav bar pages font */
 .css-uc76bn {
-    color: black;
     font-size: 26px;
+    text-align: center;
 }
 
 /* Tabs for login */
@@ -78,7 +61,6 @@ button{
 
 .footer-link{
     color:#EAF6F6;
-    
     padding: 2%;
     margin-right: 50vh;
 }
@@ -95,6 +77,7 @@ button{
 
     display: flex;
     justify-content: center;
+    margin-bottom: 15%;
 }
 
 .On-thehouse{
@@ -116,7 +99,6 @@ button{
 
 .app-div {
     margin-bottom: 30%;
-
 }
 
 .pages-div{
@@ -128,17 +110,17 @@ button{
     font-family: 'Dosis', sans-serif;
 }
 
-.css-12oz5g7{
-
-    max-width: 55rem;
-  
-}
-
 .descriptions{
     font-size: 30px;
 }
 
-.css-10xlvwk{
+.css-12oz5g7{
 
-    width:16rem;
+    max-width: 70%;
+  
+}
+
+.css-10xlvwk, .css-sr0wd7{
+
+    width: 17rem;
 }
