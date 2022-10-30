@@ -90,3 +90,55 @@ button{
 .p{
     text-align: center;
 }
+
+.image{
+
+    display: flex;
+    justify-content: center;
+}
+
+.On-thehouse{
+    font-family: 'Fasthand', cursive;
+    font-family: 'Poiret One', cursive;
+    font-size: 75px;
+    display: flex;
+    justify-content: center;
+}
+
+.css-10trblm{
+    margin: 0px;
+}
+
+.our-app{
+    text-align: center;
+    margin: auto;
+}
+
+.app-div {
+    margin-bottom: 30%;
+
+}
+
+.pages-div{
+    margin-bottom: 20%;
+}
+
+.page-headings{
+    font-size: 50px;
+    font-family: 'Dosis', sans-serif;
+}
+
+.css-12oz5g7{
+
+    max-width: 55rem;
+    margin-left: 16rem;
+}
+
+.descriptions{
+    font-size: 30px;
+}
+
+.css-10xlvwk{
+
+    width:16rem;
+}
