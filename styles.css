@@ -1,13 +1,12 @@
 
-
 p {
-    color: black;
     font-size: 20px;
     margin: 0px;
 }
 
 h1 {
     color:azure;
+    margin: 0px;
 }
 
 /* Text of profile information */
@@ -42,25 +41,10 @@ button{
     background-image: linear-gradient(90deg, hsl(165, 70%, 42%), hsl(165, 70%, 42%));
 }
 
-/* Header */
-.css-18ni7ap{
-    background-color: hsl(165, 70%, 42%);
-}
-
-/* Background Body */
-.css-fg4pbf{
-    background-color: hsl(165, 70%, 42%);
-}
-
-/* Nav bar */
-.css-10xlvwk{
-    background-color:hsla(192, 100%, 97%, 0.664);
-}
-
 /* Nav bar pages font */
 .css-uc76bn {
-    color: black;
     font-size: 26px;
+    text-align: center;
 }
 
 /* Tabs for login */
@@ -70,17 +54,27 @@ button{
     margin-right: 14px;
 }
 
-.bottom-container{
+/* Streamlit container for body block */
+.block-container{
+    padding-bottom: 0px;
+}
+
+.footer-div{
     
-   
+   margin-top: 25%;
+   text-align: center;
     
+}
+
+
+.reference-repo{
+    display: inline;
 }
 
 .footer-link{
     color:#EAF6F6;
-    
-    padding: 2%;
-    margin-right: 50vh;
+    text-decoration: none;
+    margin-right: 20px;
 }
 
 .css-1q1n0ol{
@@ -95,6 +89,7 @@ button{
 
     display: flex;
     justify-content: center;
+    margin-bottom: 15%;
 }
 
 .On-thehouse{
@@ -115,30 +110,33 @@ button{
 }
 
 .app-div {
-    margin-bottom: 30%;
-
+    margin-bottom: 25%;
 }
 
 .pages-div{
-    margin-bottom: 20%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3%;
 }
+
 
 .page-headings{
     font-size: 50px;
     font-family: 'Dosis', sans-serif;
 }
 
+.descriptions{
+    font-size: 30px;
+    margin-bottom: 10%;
+}
+
 .css-12oz5g7{
 
-    max-width: 55rem;
+    max-width: 70%;
   
 }
 
-.descriptions{
-    font-size: 30px;
-}
+.css-10xlvwk, .css-sr0wd7{
 
-.css-10xlvwk{
-
-    width:16rem;
+    width: 17rem;
 }
