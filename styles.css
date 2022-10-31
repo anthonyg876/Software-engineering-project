@@ -6,6 +6,7 @@ p {
 
 h1 {
     color:azure;
+    margin: 0px;
 }
 
 /* Text of profile information */
@@ -53,16 +54,27 @@ button{
     margin-right: 14px;
 }
 
-.bottom-container{
+/* Streamlit container for body block */
+.block-container{
+    padding-bottom: 0px;
+}
+
+.footer-div{
     
-   
+   margin-top: 25%;
+   text-align: center;
     
+}
+
+
+.reference-repo{
+    display: inline;
 }
 
 .footer-link{
     color:#EAF6F6;
-    padding: 2%;
-    margin-right: 50vh;
+    text-decoration: none;
+    margin-right: 20px;
 }
 
 .css-1q1n0ol{
@@ -98,12 +110,15 @@ button{
 }
 
 .app-div {
-    margin-bottom: 30%;
+    margin-bottom: 25%;
 }
 
 .pages-div{
-    margin-bottom: 20%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3%;
 }
+
 
 .page-headings{
     font-size: 50px;
@@ -112,6 +127,7 @@ button{
 
 .descriptions{
     font-size: 30px;
+    margin-bottom: 10%;
 }
 
 .css-12oz5g7{

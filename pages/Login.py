@@ -85,3 +85,8 @@ if st.session_state["login_bool"]:
     st.write("Logged in as ", st.session_state["username"])
 else:
      st.write("Get Logged in first")
+
+with open("footer.html") as f:
+    foot = f.read()
+
+st.markdown(foot, unsafe_allow_html=True)
