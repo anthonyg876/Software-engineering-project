@@ -18,7 +18,14 @@ def addUser(email: str, firstName: str, lastName: str, income: int, password: st
     cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [email, firstName, lastName, income, password])
     connection.commit()
     connection.close()
-
+    
+def deleteUser(email: str) -> None:
+    connection = oracledb.connect(dsn = dsn)
+    cur = connection.cursor()
+    cur.execute("delete from participants where email = :email", [email])
+    connection.commit()
+    connection.close()
+    
 def update_items():
     connection = oracledb.connect(dsn = dsn)
 
@@ -28,10 +35,6 @@ def update_items():
 
 if __name__ == "__main__":
     addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
+    deleteUser("ag@gamil.com")
     
-def deleteUser(email: str, firstName: str, lastName: str, income: int, password: str) -> None:
-    connection = oracledb.connect(dsn = dsn)
-    cur = connection.cursor()
-    cur.execute("delete from participants where email = :email", [email, firstName, lastName, income, password])
-    connection.commit()
-    connection.close()
+
