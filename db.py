@@ -28,3 +28,10 @@ def update_items():
 
 if __name__ == "__main__":
     addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
+    
+def deleteUser(email: str, firstName: str, lastName: str, income: int, password: str) -> None:
+    connection = oracledb.connect(dsn = dsn)
+    cur = connection.cursor()
+    cur.execute("delete from participants where email = :email", [email, firstName, lastName, income, password])
+    connection.commit()
+    connection.close()
