@@ -78,7 +78,30 @@ def update_items():
     with connection.cursor() as cursor:
         cursor.execute("insert into table participants")
 
+def return_all_items():
+
+    try:
+        connection = oracledb.connect(dsn = dsn)
+
+    except:
+        return "Was not able to connect to the database"
+
+    cur = connection.cursor()
+
+    cur.execute("SELECT * FROM Items")
+
+    all_items = cur.fetchall()
+    connection.close()
+
+    return all_items
+
 if __name__ == "__main__":
     # addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")\
-    # addBusiness(1, "click and Save", "123abc", "1720 sw 37th st", "Sarasota County", 9739423508)
-    addItem("tampon", "Woman product", 15.00, 25.00, 10, 1)
+
+    #print(addBusiness(2, "Walmart", "password1", "100 Gainesville Road", "Sarasota County", 7271111111))
+    #print(addItem("t-shirt", "clothing", 1.00, 10.00, 10, 2))
+
+    # Testing out selecting items
+
+    for row in return_all_items():
+        print(row)
