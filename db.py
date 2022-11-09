@@ -6,7 +6,7 @@ userpwd = "OlQYCYdeeIRYwRWfnhMePgKi"
 host = "oracle.cise.ufl.edu"
 port = 1521
 service_name = "orcl"
-
+#Yo
 dsn = f'{username}/{userpwd}@{host}:{port}/{service_name}'    
 
 '''
