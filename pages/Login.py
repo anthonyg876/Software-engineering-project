@@ -1,33 +1,82 @@
 import streamlit as st
 
+
+def seller_account_form():
+
+    business_name = st.text_input("Business name", placeholder="Name here")
+    address = st.text_input("Business address", placeholder="Address, City, State")
+    county = st.text_input("County", placeholder="County here")
+    phone_number = st.text_input("Phone number", placeholder="Enter number with no hyphens or separators")
+    business_id = st.text_input("Enter your unique store id", placeholder="Number here")
+
+def buyer_account_form():
+
+    first_name = st.text_input("First Name", placeholder="Name here")
+    last_name = st.text_input("Last Name", placeholder="Name here")
+    income = st.number_input("Income", min_value=0, step=1000)
+    buyer_email = st.text_input("Email", placeholder="Type email here")
+
+
 account_tab, login_tab = st.tabs(["Create Account", "Login"])
 
 with account_tab:
+
     st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
-    st.write("Create An Account")
+
+    combined_account = st.checkbox("Check box if you are BOTH a seller and buyer")
+
+    if combined_account:
+        
+        seller_account_form()
+        st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
+        buyer_account_form()
+
+
+
+    else:
+
+        user = st.radio(label="User Type", options=("Seller", "Buyer"))
+
+        st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
+
+        if user == "Seller":
+            seller_account_form()
+
+        if user == "Buyer":
+            buyer_account_form()
+            
+    password = st.text_input("Password", placeholder="Type a good password here", type="password")
+
+    st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
+
+    create_account_cols = st.columns(2)
+
+    with create_account_cols[0]:
+        st.write("When all input has been filled, click Create Account.")
+
+    with create_account_cols[1]:
+        if st.button("Create Account"):
+            st.write("Account Created")
+
+            
 
 with login_tab:
+
     st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
-    st.write("Login")
 
-st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
 
-user = st.radio(label="User Type", options=("Seller", "Buyer"))
+    if st.button("Login"):
+        st.write("You are now logged in")
 
-if user == "Seller":
-    st.write("Seller has been selected")
 
-if user == "Buyer":
-    st.write("Buyer has been selected")
 
 if "login_bool" not in st.session_state:
     st.session_state["login_bool"] = False
 
 if "username" not in st.session_state:
         st.session_state["username"] = "Default"
-
-username = st.text_input("Username")
-password = st.text_input("Password")
 
 # if st.button("Submit"):
 
@@ -47,31 +96,10 @@ password = st.text_input("Password")
 
 
 with open("styles.css") as f:
-    heading_style = f.read()
-
-
-with open("parth.html") as p:
-    parth_html = p.read()
-
-col1, col2, col3 = st.columns(3)
-
-
-with col1:
-    add_btn = st.button("Add")
-
-with col2:
-
-    if st.button("Update"):
-      st.write("Update")
-
-with col3:
-    st.button("Delete")
-
-
-st.markdown(f"""{parth_html}""", unsafe_allow_html=True)
+    css_style = f.read()
 
 st.markdown(f"""
-    <style>{heading_style}</style>""", unsafe_allow_html=True
+    <style>{css_style}</style>""", unsafe_allow_html=True
 )
 
 
