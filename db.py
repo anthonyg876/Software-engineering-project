@@ -55,7 +55,6 @@ def deleteUser(email: str) -> None:
     cur.execute("delete from participants where email = :email", [email])
     connection.commit()
     connection.close()
-    return output
 
 '''
 Add item to database
@@ -103,8 +102,8 @@ def return_all_items():
     return all_items
 
 if __name__ == "__main__":
-    addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
-    deleteUser("ag@gamil.com")
+    addUser("abc@gamil.com", "Anthony", "Gravier", 85000, "boof")
+    # deleteUser("ag@gamil.com")
     
 
 
