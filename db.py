@@ -48,6 +48,13 @@ def addBusiness(id: int, name: str, password: str, address: str, county: str, ph
     except:
         output = "Unsuccessful"
     connection.close()
+    
+def deleteUser(email: str) -> None:
+    connection = oracledb.connect(dsn = dsn)
+    cur = connection.cursor()
+    cur.execute("delete from participants where email = :email", [email])
+    connection.commit()
+    connection.close()
     return output
 
 '''
@@ -96,6 +103,11 @@ def return_all_items():
     return all_items
 
 if __name__ == "__main__":
+    addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
+    deleteUser("ag@gamil.com")
+    
+
+
     # addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")\
 
     #print(addBusiness(2, "Walmart", "password1", "100 Gainesville Road", "Sarasota County", 7271111111))
