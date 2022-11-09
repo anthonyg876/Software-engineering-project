@@ -19,7 +19,7 @@ def addUser(email: str, firstName: str, lastName: str, income: int, password: st
         print("Connected to database")
 
     except:
-        print("Was not able to ")
+        print("Was not able to connect to the database.")
     cur = connection.cursor()
     try:
         cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [email, firstName, lastName, income, password])
