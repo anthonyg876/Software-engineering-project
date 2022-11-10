@@ -49,12 +49,54 @@ def addBusiness(id: int, name: str, password: str, address: str, county: str, ph
         output = "Unsuccessful"
     connection.close()
     
-def deleteUser(email: str) -> None:
-    connection = oracledb.connect(dsn = dsn)
+def updateBusiness(id: int, name: str, password: str, address: str, county: str, phone_number: int) -> str:
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
     cur = connection.cursor()
-    cur.execute("delete from participants where email = :email", [email])
-    connection.commit()
+    try:
+        cur.execute("update business set name = :name, password = :password, address = :address, county = :county, phone_number = :phone_number where id = :id", [name, password, address, county, phone_number, id])
+        connection.commit()
+        output = "updated business to database"
+    except:
+        output = "Unsuccessful"
     connection.close()
+
+def deleteBusiness(id: int) -> str:
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()
+    try:
+        cur.execute("delete from business where id = :id", [id])        
+        connection.commit()
+        output = "deleted business from database"
+    except:
+        output = "Unsuccessful"
+    connection.close()
+    
+def deleteParticipant(email: str) -> None:
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()
+    try:
+        cur.execute("delete from participants where email = :email", [email])
+        connection.commit()
+        output = "Deleted user from database."
+    except:
+        output = "Unable to deleted user from database"
+    connection.close()
+    return output
+
 
 '''
 Add item to database
@@ -101,10 +143,56 @@ def return_all_items():
 
     return all_items
 
-if __name__ == "__main__":
-    addUser("abc@gamil.com", "Anthony", "Gravier", 85000, "boof")
-    # deleteUser("ag@gamil.com")
+def updateParticipants(email: str, firstName: str, lastName: str, income: int, password: str) -> str:
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()
+    try:
+        cur.execute("update participants set firstName = :firstName, lastName = :lastName, income = :income, password = :password where email = :email", [firstName, lastName, income, password, email])
+        connection.commit()
+        output = "Updated participants"
+    except:
+        output = "Unsuccessful"
+    connection.close()
+
+def updateEmail(email: str, firstName: str, lastName: str, income: int, password: str, newEmail: str) -> str:
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()   
+    try:
+        cur.execute("delete from participants where email = :email", [email])
+        connection.commit()
+        output = "Updated Email"
+    except:
+        output = "Unsuccessful"
+    try:
+        cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [newEmail, firstName, lastName, income, password])
+        connection.commit()
+        output = "Updated Email"
+    except:
+        output = "Unsuccessful"
+    connection.close()
     
+if __name__ == "__main__":
+    addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
+    deleteUser("ag@gamil.com")
+    #deleteParticipant("realNewEmail@RealNew.com")  
+    #deleteParticipant("ag@gamil.com")   
+    #addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
+    #updateParticipants("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword")
+    #updateEmail("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword","realNewEmail@RealNew.com")
+    #deleteParticipant("realNewEmail@RealNew.com")
+    #addBusiness(1, "Business", "pass1", "address1", "33612", 123456789)
+    #updateBusiness(1, "NEwBusiness", "NEwpass1", "Newaddress1", "33615", 00000000)
+    #deleteBusiness(1)
 
 
     # addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")\
