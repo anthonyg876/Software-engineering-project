@@ -49,7 +49,7 @@ with account_tab:
         st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
         participant_values = participant_form()
 
-        participant_values["income"] = st.number_input("Annual Income in US dollars", min_value=0, step=1000)
+        participant_values["income"] = st.number_input("Annual income to the nearest US dollar", min_value=0, step=1000)
 
     else:
 
@@ -68,7 +68,7 @@ with account_tab:
         if user == "Buyer":
 
             participant_values = participant_form()
-            participant_values["income"] = st.number_input("Annual Income in US dollars", min_value=0, step=1000)
+            participant_values["income"] = st.number_input("Annual income to the nearest US dollar", min_value=0, step=1000)
 
     st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
 
@@ -106,7 +106,7 @@ with account_tab:
                         successful_account = False
 
                     if participant_values["income"] > 30000:
-                        st.write("Income is higher than $30,000. Users must make less than that amount.")
+                        st.write("Income must be $30,000 or less.")
                         successful_account = False
 
             else:
@@ -148,10 +148,11 @@ with account_tab:
                     else:
 
                         if participant_values["income"] > 30000:
-                            st.write("Income is higher than $30,000. Users must make less than that amount.")
+                            st.write("Income must be $30,000 or less.")
                             successful_account = False
 
             if successful_account:
+
                 if db.addUser(
                             participant_values["email"],
                             participant_values["first_name"],
@@ -162,9 +163,6 @@ with account_tab:
                             st.write("User was not added")
                 else:
                     st.write("All sucessful!")
-
-                    for row in db.return_all_items():
-                        st.write(row)
 
             
 
