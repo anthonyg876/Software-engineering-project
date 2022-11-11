@@ -332,5 +332,6 @@ if __name__ == "__main__":
 
     # Testing out selecting items
 
-    for row in return_all_participants():
-        print(row)
+
+    #for row in return_all_items():
+        #print(row)
