@@ -81,8 +81,7 @@ with account_tab:
 
         if st.button("Create Account"):
 
-            successful_account_seller = True
-            successful_account_buyer = True
+            successful_account = True
 
             if combined_account:
 
@@ -90,8 +89,7 @@ with account_tab:
                 
                 if blank:
                     st.write("Fill out every input box")
-                    successful_account_seller = False
-                    successful_account_buyer = False
+                    successful_account = False
 
                 else:
 
@@ -99,23 +97,32 @@ with account_tab:
                         seller_values["phone_number"] = int(seller_values["phone_number"])
                     except:
                         st.write("Phone number needs to be just numerical digits (no hyphens or other characters)")
-                        successful_account_seller = False
-                        successful_account_buyer = False
+                        successful_account = False
 
                     try:
                         seller_values["business_id"] = int(seller_values["business_id"]) 
                     except:
                         st.write("Need a numerical value for business id")
-                        successful_account_seller = False
-                        successful_account_buyer = False
+                        successful_account = False
 
                     if participant_values["income"] > 30000:
                         st.write("Income must be $30,000 or less.")
-                        successful_account_seller = False
-                        successful_account_buyer = False
+                        successful_account = False
 
                     else:
-                        if db.addBusiness(
+
+                        if successful_account:
+
+                            if db.addUser(
+                                    participant_values["email"],
+                                    participant_values["first_name"],
+                                    participant_values["last_name"],
+                                    participant_values["income"],
+                                    participant_values["password"]
+                                ) != "Added user into database":
+                                    st.write("User was not added")
+
+                            elif db.addBusiness(
                                 participant_values["email"], 
                                 seller_values["business_id"], 
                                 seller_values["business_name"], 
@@ -124,8 +131,10 @@ with account_tab:
                                 seller_values["county"], 
                                 seller_values["phone_number"]
                             ) == "Unsuccessful":
-                                successful_account_seller = False
-                                successful_account_buyer = False
+                                st.write("User was not added")
+                                    
+                            else:
+                                st.write("User account was added")
                                 
 
             else:
@@ -136,7 +145,7 @@ with account_tab:
                 
                     if blank:
                         st.write("Fill out every input box")
-                        successful_account_seller = False
+                        successful_account = False
 
                     else:
 
@@ -144,16 +153,26 @@ with account_tab:
                             seller_values["phone_number"] = int(seller_values["phone_number"])
                         except:
                             st.write("Phone number needs to be just numerical digits (no hyphens or other characters)")
-                            successful_account_seller = False
+                            successful_account = False
 
                         try:
                             seller_values["business_id"] = int(seller_values["business_id"]) 
                         except:
                             st.write("Need a numerical value for business id") 
-                            successful_account_seller = False
+                            successful_account = False
 
-                        if successful_account_seller:
-                            if db.addBusiness(
+                        if successful_account:
+
+                            if db.addUser(
+                                participant_values["email"],
+                                participant_values["first_name"],
+                                participant_values["last_name"],
+                                participant_values["income"],
+                                participant_values["password"]
+                            ) != "Added user into database":
+                                st.write("User was not added")
+
+                            elif db.addBusiness(
                                 participant_values["email"], 
                                 seller_values["business_id"], 
                                 seller_values["business_name"], 
@@ -162,7 +181,10 @@ with account_tab:
                                 seller_values["county"], 
                                 seller_values["phone_number"]
                             ) == "Unsuccessful":
-                                successful_account_seller = False
+                                st.write("User was not added")
+                                
+                            else:
+                                st.write("User account was added")
 
                 else:
 
@@ -170,37 +192,49 @@ with account_tab:
                 
                     if blank:
                         st.write("Fill out every input box")
-                        successful_account_buyer = False
+                        successful_account = False
                     
                     else:
 
                         if participant_values["income"] > 30000:
                             st.write("Income must be $30,000 or less.")
-                            successful_account_buyer = False
+                            successful_account = False
 
-            if successful_account_seller and successful_account_buyer:
+                        else:
+                            if db.addUser(
+                                participant_values["email"],
+                                participant_values["first_name"],
+                                participant_values["last_name"],
+                                participant_values["income"],
+                                participant_values["password"]
+                            ) != "Added user into database":
+                                st.write("User was not added")
 
-                if db.addUser(
-                            participant_values["email"],
-                            participant_values["first_name"],
-                            participant_values["last_name"],
-                            participant_values["income"],
-                            participant_values["password"]
-                        ) != "Added user into database":
-                            st.write("User was not added")
-                else:
-                    st.write("User account was added")
-                    all_businesses = db.return_all_businesses()
-                    all_participants = db.return_all_participants
+                            else:
+                                st.write("User account was added")
 
-                    for record in all_businesses:
-                        st.write(record)
 
-                    for record in all_participants:
-                        st.write(record)
+            print("Participants")
+            print()
 
-            else:
-                st.write("User was not added")
+            for row in db.return_all_participants():
+                print(row)
+
+            print("Businesses")
+            print()
+
+            for row in db.return_all_businesses():
+                print(row)
+
+            print()
+            print()
+            print()
+            print("Owned")
+            
+            for row in db.return_all_owned():
+                print(row)
+
+
 
                     
 
