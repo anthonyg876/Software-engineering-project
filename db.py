@@ -1,8 +1,8 @@
 import oracledb
 
 # Variables needed for the login.
-username = "agravier"
-userpwd = "OlQYCYdeeIRYwRWfnhMePgKi"
+username = "hlee3"
+userpwd = "dzPHnwNnvWrLjXL7S0oZNmYv"
 host = "oracle.cise.ufl.edu"
 port = 1521
 service_name = "orcl"
