@@ -81,7 +81,8 @@ with account_tab:
 
         if st.button("Create Account"):
 
-            successful_account = True
+            successful_account_seller = True
+            successful_account_buyer = True
 
             if combined_account:
 
@@ -89,7 +90,8 @@ with account_tab:
                 
                 if blank:
                     st.write("Fill out every input box")
-                    successful_account = False
+                    successful_account_seller = False
+                    successful_account_buyer = False
 
                 else:
 
@@ -97,17 +99,34 @@ with account_tab:
                         seller_values["phone_number"] = int(seller_values["phone_number"])
                     except:
                         st.write("Phone number needs to be just numerical digits (no hyphens or other characters)")
-                        successful_account = False
+                        successful_account_seller = False
+                        successful_account_buyer = False
 
                     try:
                         seller_values["business_id"] = int(seller_values["business_id"]) 
                     except:
                         st.write("Need a numerical value for business id")
-                        successful_account = False
+                        successful_account_seller = False
+                        successful_account_buyer = False
 
                     if participant_values["income"] > 30000:
                         st.write("Income must be $30,000 or less.")
-                        successful_account = False
+                        successful_account_seller = False
+                        successful_account_buyer = False
+
+                    else:
+                        if db.addBusiness(
+                                participant_values["email"], 
+                                seller_values["business_id"], 
+                                seller_values["business_name"], 
+                                participant_values["password"], 
+                                seller_values["address"], 
+                                seller_values["county"], 
+                                seller_values["phone_number"]
+                            ) == "Unsuccessful":
+                                successful_account_seller = False
+                                successful_account_buyer = False
+                                
 
             else:
 
@@ -117,7 +136,7 @@ with account_tab:
                 
                     if blank:
                         st.write("Fill out every input box")
-                        successful_account = False
+                        successful_account_seller = False
 
                     else:
 
@@ -125,17 +144,25 @@ with account_tab:
                             seller_values["phone_number"] = int(seller_values["phone_number"])
                         except:
                             st.write("Phone number needs to be just numerical digits (no hyphens or other characters)")
-                            successful_account = False
+                            successful_account_seller = False
 
                         try:
                             seller_values["business_id"] = int(seller_values["business_id"]) 
                         except:
                             st.write("Need a numerical value for business id") 
-                            successful_account = False
+                            successful_account_seller = False
 
-                        if successful_account:
-                            #db.addBusiness()
-                            pass
+                        if successful_account_seller:
+                            if db.addBusiness(
+                                participant_values["email"], 
+                                seller_values["business_id"], 
+                                seller_values["business_name"], 
+                                participant_values["password"], 
+                                seller_values["address"], 
+                                seller_values["county"], 
+                                seller_values["phone_number"]
+                            ) == "Unsuccessful":
+                                successful_account_seller = False
 
                 else:
 
@@ -143,15 +170,15 @@ with account_tab:
                 
                     if blank:
                         st.write("Fill out every input box")
-                        successful_account = False
+                        successful_account_buyer = False
                     
                     else:
 
                         if participant_values["income"] > 30000:
                             st.write("Income must be $30,000 or less.")
-                            successful_account = False
+                            successful_account_buyer = False
 
-            if successful_account:
+            if successful_account_seller and successful_account_buyer:
 
                 if db.addUser(
                             participant_values["email"],
@@ -162,7 +189,20 @@ with account_tab:
                         ) != "Added user into database":
                             st.write("User was not added")
                 else:
-                    st.write("All sucessful!")
+                    st.write("User account was added")
+                    all_businesses = db.return_all_businesses()
+                    all_participants = db.return_all_participants
+
+                    for record in all_businesses:
+                        st.write(record)
+
+                    for record in all_participants:
+                        st.write(record)
+
+            else:
+                st.write("User was not added")
+
+                    
 
             
 
