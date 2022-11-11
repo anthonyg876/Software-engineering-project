@@ -47,12 +47,14 @@ def addBusiness(email: str, id: int, name: str, password: str, address: str, cou
         output = "Added business to database"
     except:
         output = "Unsuccessful"
+        print("Unsuccesful business insertion")
     try:
         cur.execute("insert into ownsbusiness values(:email, :bid)", [email, id])
         connection.commit()
         output = "inserted ownsbusiness relationship Email"
     except:
         output = "Unsuccessful"
+        print("Unsuccesful owns business inseert")
     connection.close()
 
     return output
@@ -145,7 +147,7 @@ def return_all_participants():
 
     cur = connection.cursor()
 
-    cur.execute("SELECT * FROM participants")
+    cur.execute("SELECT * FROM participants ORDER BY email")
 
     all_participants = cur.fetchall()
     connection.close()
@@ -162,12 +164,29 @@ def return_all_businesses():
 
     cur = connection.cursor()
 
-    cur.execute("SELECT * FROM Business")
+    cur.execute("SELECT * FROM Business ORDER BY id")
 
     all_businesses = cur.fetchall()
     connection.close()
 
     return all_businesses
+
+def return_all_owned():
+
+    try:
+        connection = oracledb.connect(dsn = dsn)
+
+    except:
+        return "Was not able to connect to the database"
+
+    cur = connection.cursor()
+
+    cur.execute("SELECT * FROM ownsBusiness")
+
+    all_owned = cur.fetchall()
+    connection.close()
+
+    return all_owned
 
 def updateParticipantsFirstName(email: str, firstName: str) -> str:
     # Attempt connection to Oracle database.
@@ -352,5 +371,9 @@ if __name__ == "__main__":
     # Testing out selecting items
 
 
+    print("Participants")
+    print()
+
     for row in return_all_participants():
         print(row)
+
