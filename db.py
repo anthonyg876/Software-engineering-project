@@ -48,28 +48,13 @@ def addBusiness(email: str, id: int, name: str, password: str, address: str, cou
     except:
         output = "Unsuccessful"
     try:
-        cur.execute("insert into ownsbusiness values(:usermail, :bid)", [email, id])
+        cur.execute("insert into ownsbusiness values(:email, :bid)", [email, id])
         connection.commit()
         output = "inserted ownsbusiness relationship Email"
     except:
         output = "Unsuccessful"
     connection.close()
-    
-def updateBusiness(id: int, name: str, password: str, address: str, county: str, phone_number: int) -> str:
-    # Attempt connection to Oracle database.
-    try:
-        connection = oracledb.connect(dsn = dsn)
-        print("Connected to database")
-    except:
-        print("Was not able to connect to database")
-    cur = connection.cursor()
-    try:
-        cur.execute("update business set name = :name, password = :password, address = :address, county = :county, phone_number = :phone_number where id = :id", [name, password, address, county, phone_number, id])
-        connection.commit()
-        output = "updated business to database"
-    except:
-        output = "Unsuccessful"
-    connection.close()
+
     
 def deleteParticipant(email: str) -> None:
     try:
@@ -164,28 +149,6 @@ def return_all_participants():
     connection.close()
 
     return all_participants
-
-def updateEmail(email: str, firstName: str, lastName: str, income: int, password: str, newEmail: str) -> str:
-    # Attempt connection to Oracle database.
-    try:
-        connection = oracledb.connect(dsn = dsn)
-        print("Connected to database")
-    except:
-        print("Was not able to connect to database")
-    cur = connection.cursor()   
-    try:
-        cur.execute("delete from participants where email = :email", [email])
-        connection.commit()
-        output = "Updated Email"
-    except:
-        output = "Unsuccessful"
-    try:
-        cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [newEmail, firstName, lastName, income, password])
-        connection.commit()
-        output = "Updated Email"
-    except:
-        output = "Unsuccessful"
-    connection.close()
 
 def updateParticipantsFirstName(email: str, firstName: str) -> str:
     # Attempt connection to Oracle database.
@@ -363,7 +326,8 @@ if __name__ == "__main__":
     #updateParticipantsLastName("hantetst@gmail.com","newLast")
     #updateParticipantsIncome("hantetst@gmail.com",5555)
     #updateParticipantsPassword("hantetst@gmail.com","newPAss")
-    
+    #addUser("han2@han.com", "han","lee",5555,"pass")
+    #addBusiness("han2@han.com", 78, "hanNewBusiness", "HanNewPass", "myNewYard", "myCNewounty", 333444)
 
 
     # Testing out selecting items
