@@ -55,6 +55,8 @@ def addBusiness(email: str, id: int, name: str, password: str, address: str, cou
         output = "Unsuccessful"
     connection.close()
 
+    return output
+
     
 def deleteParticipant(email: str) -> None:
     try:
@@ -149,6 +151,23 @@ def return_all_participants():
     connection.close()
 
     return all_participants
+
+def return_all_businesses():
+
+    try:
+        connection = oracledb.connect(dsn = dsn)
+
+    except:
+        return "Was not able to connect to the database"
+
+    cur = connection.cursor()
+
+    cur.execute("SELECT * FROM Business")
+
+    all_businesses = cur.fetchall()
+    connection.close()
+
+    return all_businesses
 
 def updateParticipantsFirstName(email: str, firstName: str) -> str:
     # Attempt connection to Oracle database.
@@ -333,5 +352,5 @@ if __name__ == "__main__":
     # Testing out selecting items
 
 
-    #for row in return_all_items():
-        #print(row)
+    for row in return_all_participants():
+        print(row)
