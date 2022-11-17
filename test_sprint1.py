@@ -5,87 +5,87 @@ import pytest
 
 def test_addUser1():
 
-    db.addUser("user981@gmail.com", "User981First", "User981Last", 0, "user981pass")
+    db.addUser("zbuyer1@gmail.com", "zBuyer1First", "zBuyer1Last", 0, "zBuyer1pass")
 
     last_record = db.return_all_participants()[-1]
 
-    assert last_record[0] == "user981@gmail.com"
+    assert last_record[0] == "zbuyer1@gmail.com"
 
 
 def test_addUser2():
 
-    db.addUser("user981@gmail.com", "User981First", "User981Last", 0, "user981pass")
+    db.addUser("zbuyer2@gmail.com", "zBuyer2First", "zBuyer2Last", 0, "zBuyer2pass")
 
     last_record = db.return_all_participants()[-1]
 
-    assert last_record[1] == "User981First"  
+    assert last_record[1] == "zBuyer2First"  
 
 
 def test_addUser3():
 
-    db.addUser("user981@gmail.com", "User981First", "User981Last", 0, "user981pass")
+    db.addUser("zbuyer3@gmail.com", "zBuyer3First", "zBuyer3Last", 0, "zBuyer3pass")
 
     last_record = db.return_all_participants()[-1]
 
-    assert last_record[4] == "user981pass"  
+    assert last_record[4] == "zBuyer3pass"  
 
 
 def test_addBusiness1():
 
-    db.addBusiness("seller40004@gmail.com", 40004, "Business40004", "pass40004", "address40004", "c40004", 123456789)
+    db.addBusiness("seller4@gmail.com", 4, "Seller4", "password4", "Seller4addr", "county4", 123456789)
 
     last_record = db.return_all_businesses()[-1]
 
-    assert last_record[0] == 40004
+    assert last_record[0] == 4
 
 
 def test_addBusiness2():
 
-    db.addBusiness("seller40005@gmail.com", 40005, "Business40005", "pass40005", "address40005", "c40005", 123456789)
+    db.addBusiness("seller5@gmail.com", 5, "Seller5", "password5", "Seller5addr", "county5", 223456789)
 
     last_record = db.return_all_businesses()[-1]
 
-    assert last_record[2] == "pass40005"
+    assert last_record[2] == "password5"
 
     
 
 def test_updateBusiness1():
 
-    db.updateBusinessName(40005,"UpName")
+    db.updateBusinessName(5,"NameUpdate")
 
     last_record = db.return_all_businesses()[-1]
 
-    assert last_record[1] == "UpName"
+    assert last_record[1] == "NameUpdate"
 
 
 def test_updateBusiness2():
 
-    db.updateBusinessPhoneNumber(40005, 9991234511)
+    db.updateBusinessPhoneNumber(5, 1000000000)
 
     last_record = db.return_all_businesses()[-1]
 
-    assert last_record[5] == 9991234511
+    assert last_record[5] == 1000000000
 
 def test_updateIncome():
 
-    db.updateParticipantsIncome("user981@gmail.com", 50)
+    db.updateParticipantsIncome("zbuyer3@gmail.com", 500)
 
     last_record = db.return_all_participants()[-1]
 
-    assert last_record[3] == 50
+    assert last_record[3] == 500
 
 def test_updateLast():
 
-    db.updateParticipantsLastName("user981@gmail.com", "Jenkins")
+    db.updateParticipantsLastName("zbuyer3@gmail.com", "UpdateLast")
 
     last_record = db.return_all_participants()[-1]
 
-    assert last_record[2] == "Jenkins"
+    assert last_record[2] == "UpdateLast"
 
 def test_deleteuser():
 
-    db.deleteParticipant("user981@gmail.com")
+    db.deleteParticipant("zbuyer3@gmail.com")
 
     last_record = db.return_all_participants()[-1]
 
-    assert last_record[2] != "Jenkins"
+    assert last_record[2] != "UpdateLast"
