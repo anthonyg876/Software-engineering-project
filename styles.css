@@ -1,7 +1,11 @@
 
 
 p {
+<<<<<<< Updated upstream
     color: black;
+=======
+
+>>>>>>> Stashed changes
     font-size: 20px;
     margin: 0px;
 }
@@ -70,12 +74,15 @@ button{
     margin-right: 14px;
 }
 
+<<<<<<< Updated upstream
 .bottom-container{
     
    
     
 }
 
+=======
+>>>>>>> Stashed changes
 .footer-link{
     color:#EAF6F6;
     
@@ -129,6 +136,7 @@ button{
 }
 
 .css-12oz5g7{
+<<<<<<< Updated upstream
 
     max-width: 55rem;
   
@@ -141,4 +149,28 @@ button{
 .css-10xlvwk{
 
     width:16rem;
+=======
+
+    max-width: 55rem;
+  
+}
+
+.descriptions{
+    font-size: 30px;
+}
+
+.css-10xlvwk{
+
+    width:16rem;
+}
+
+
+.itemHead,.titleHead{
+    text-align: center;
+}
+
+
+.itemInfo{
+    text-align: center;
+>>>>>>> Stashed changes
 }
