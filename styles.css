@@ -130,3 +130,7 @@ h1 {
 
     width: 17rem;
 }
+
+.itemHead, .titleHead, .itemInfo{
+    text-align: center;
+}
