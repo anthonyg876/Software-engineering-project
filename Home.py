@@ -1,5 +1,7 @@
 import streamlit as st
 
+if "user" not in st.experimental_get_query_params():
+    st.experimental_set_query_params(user="no")
 
 with open("styles.css") as f:
     css_file = f.read()

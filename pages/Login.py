@@ -1,6 +1,12 @@
 import streamlit as st
 import db
 
+if "user" not in st.experimental_get_query_params():
+    st.experimental_set_query_params(user="no")
+
+def login():
+    st.experimental_set_query_params(user="both")
+
 def seller_account_form():
 
     seller_values = {}
@@ -232,47 +238,22 @@ with account_tab:
             print("Owned")
             
             for row in db.return_all_owned():
-                print(row)
-
-
-
-                    
-
-            
+                print(row)         
 
 with login_tab:
 
-    st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
+    if st.experimental_get_query_params()["user"][0] == "no":
 
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+        st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
 
-    if st.button("Login"):
-        st.write("You are now logged in")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
 
+        if st.button("Login", on_click=login):
+            st.write("You are now logged in")
 
-
-if "login_bool" not in st.session_state:
-    st.session_state["login_bool"] = False
-
-if "username" not in st.session_state:
-        st.session_state["username"] = "Default"
-
-# if st.button("Submit"):
-
-#     st.write(username)
-#     st.write(password)
-
-#     if password == "Password1":
-    
-#         st.write("You're Logged in")
-
-#         st.session_state["username"] = username
-#         st.session_state["login_bool"] = True
-
-#     else:
-#         st.write("Try again")
-
+    else:
+        st.title("You're logged in")
 
 
 with open("styles.css") as f:
@@ -281,18 +262,6 @@ with open("styles.css") as f:
 st.markdown(f"""
     <style>{css_style}</style>""", unsafe_allow_html=True
 )
-
-
-if "login_bool" not in st.session_state:
-    st.session_state["login_bool"] = False
-
-if "username" not in st.session_state:
-    st.session_state["username"] = "Default"
-
-if st.session_state["login_bool"]:
-    st.write("Logged in as ", st.session_state["username"])
-else:
-     st.write("Get Logged in first")
 
 with open("footer.html") as f:
     foot = f.read()
