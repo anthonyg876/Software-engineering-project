@@ -29,12 +29,14 @@ create table items(
     originalPrice numeric(8,2),
     quantity int,
     bId int,
-    foreign key (bId) references Business(id)
+    foreign key (bId) references Business(id),
+    constraint PK_itemBusiness primary key(name, bId)
     );
     
 create table ownsBusiness(
     userEmail varchar(30),
     bId int,
     foreign key(userEmail) references participants(email),
-    foreign key(bId) references Business(id)
+    foreign key(bId) references Business(id),
+    constraint PK_ownsbusiness primary key(userEmail,bId)
     );
