@@ -21,6 +21,10 @@ h1 {
     height: 30px;
 }
 
+.emptyItemDiv{
+    height: 100px;
+}
+
 .css-1cpxqw2{
     color: purple;
 }
@@ -133,4 +137,17 @@ h1 {
 
 .itemHead, .titleHead, .itemInfo{
     text-align: center;
+}
+
+.itemHead, .titleHead{
+    font-size: 40px;
+}
+
+.css-10trblm{
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    word-break: break-word;
+
 }

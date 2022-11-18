@@ -49,45 +49,53 @@ for i in range(numItems):
     if i % 3 == 0:
 
         with col1:
-            st.markdown("""<h1 class= "itemHead">CVS</h1>
-                            <h2 class = "titleHead">Tooth paste</h2>""",
+            st.markdown("""<p class= "itemHead">CVS</h1>
+                            <p class = "titleHead">Tooth paste</h2>""",
                             unsafe_allow_html=True)
             categoryImg(cat)
             st.markdown(f"""
-                            <h3 class = "itemInfo">price ${price1}</h3>
-                            <h3 class = "itemInfo"> Quantity {quatitiy} </h3>
-                            <h3 class = "itemInfo">county : {county}</h3>
-                            <h3 class = "itemInfo">address {address}</h3>
-                            <h3 class = "itemInfo">phone # {phone}</h3>""",
+                            <p class = "itemInfo">price ${price1}</h3>
+                            <p class = "itemInfo"> Quantity {quatitiy} </h3>
+                            <p class = "itemInfo">county : {county}</h3>
+                            <p class = "itemInfo">address {address}</h3>
+                            <p class = "itemInfo">phone # {phone}</h3>""",
                             unsafe_allow_html=True)
+
+            st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
+
     elif i % 3 == 1:
 
         with col2:
-            st.markdown("""<h1 class= "itemHead">CVS</h1>
-                            <h2 class = "titleHead">Tooth paste</h2>""",
+            st.markdown("""<p class= "itemHead">CVS</h1>
+                            <p class = "titleHead">Tooth paste</h2>""",
                             unsafe_allow_html=True)
             categoryImg(cat)
             st.markdown(f"""
-                            <h3 class = "itemInfo">price ${price1}</h3>
-                            <h3 class = "itemInfo"> Quantity {quatitiy} </h3>
-                            <h3 class = "itemInfo">county : {county}</h3>
-                            <h3 class = "itemInfo">address {address}</h3>
-                            <h3 class = "itemInfo">phone # {phone}</h3>""",
+                            <p class = "itemInfo">price ${price1}</h3>
+                            <p class = "itemInfo"> Quantity {quatitiy} </h3>
+                            <p class = "itemInfo">county : {county}</h3>
+                            <p class = "itemInfo">address {address}</h3>
+                            <p class = "itemInfo">phone # {phone}</h3>""",
                             unsafe_allow_html=True)
+
+            st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
+
     else:
         
         with col3:
-            st.markdown("""<h1 class= "itemHead">CVS</h1>
-                            <h2 class = "titleHead">Tooth paste</h2>""",
+            st.markdown("""<p class= "itemHead">CVS</h1>
+                            <p class = "titleHead">Tooth paste</h2>""",
                             unsafe_allow_html=True)
             categoryImg(cat)
             st.markdown(f"""
-                            <h3 class = "itemInfo">price ${price1}</h3>
-                            <h3 class = "itemInfo"> Quantity {quatitiy} </h3>
-                            <h3 class = "itemInfo">county : {county}</h3>
-                            <h3 class = "itemInfo">address {address}</h3>
-                            <h3 class = "itemInfo">phone # {phone}</h3>""",
+                            <p class = "itemInfo">price ${price1}</h3>
+                            <p class = "itemInfo"> Quantity {quatitiy} </h3>
+                            <p class = "itemInfo">county : {county}</h3>
+                            <p class = "itemInfo">address {address}</h3>
+                            <p class = "itemInfo">phone # {phone}</h3>""",
                             unsafe_allow_html=True)
+
+            st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
 with open("footer.html") as f:
     foot = f.read()
