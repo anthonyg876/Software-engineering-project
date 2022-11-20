@@ -112,6 +112,31 @@ def addItem(name: str, category: str, postPrice: float, originalPrice: float, qu
         output = "Unable to add item into database"
     connection.close()
     return output
+'''
+Verifies user credentials and returns user info.
+'''
+def verifyLogin(email: str, password: str) -> user:
+    # Attempt connection to Oracle db.
+    try: 
+        connection = oracledb.connect(dsn=dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()
+    # Check if the user even exists
+    cur.execute("select * from participants where email = :email", [email])
+    number = cur.fetchall() 
+    if (len(number) != 1):
+        print("User with email does not exist")
+        return None
+    
+    cur.execute("select * from participants where email = :email and password = :password", [email, password])
+    user = cur.fetchall()
+    if (len(user) != 1):
+        print("Password does not match, try again")
+        return None
+    print("Successfully verified user")
+    return user
 
 # @TODO Needs to be completed.
 def update_items():
@@ -337,9 +362,10 @@ def updateBusinessPhoneNumber(id: int, phone_Number: str) -> str:
 # def addItem(name: str, category: str, postPrice: float, originalPrice: float, quantity: int, bId: int)-
 
 if __name__ == "__main__":
-    #addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
+    deleteParticipant("ag@gmail.com")   
+    addUser("ag@gmail.com", "Anthony", "Gravier", 85000, "boof")
+    verifyLogin("ag@gmail.com", "boof")
     #deleteParticipant("realNewEmail@RealNew.com")  
-    #deleteParticipant("ag@gamil.com")   
     #addUser("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
     #updateParticipants("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword")
     #updateEmail("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword","realNewEmail@RealNew.com")
