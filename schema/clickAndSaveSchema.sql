@@ -34,9 +34,9 @@ create table items(
     );
     
 create table ownsBusiness(
-    userEmail varchar(30),
+    email varchar(30),
     bId int,
-    foreign key(userEmail) references participants(email),
+    foreign key(email) references participants(email),
     foreign key(bId) references Business(id),
-    constraint PK_ownsbusiness primary key(userEmail,bId)
+    constraint PK_ownsbusiness primary key(email,bId)
     );
