@@ -149,7 +149,7 @@ def addItem(name: str, category: str, postPrice: float, originalPrice: float, qu
 '''
 Verifies user credentials and returns user info.
 '''
-def verifyLogin(email: str, password: str) -> user:
+def verifyLogin(email: str, password: str):
     # Attempt connection to Oracle db.
     try: 
         connection = oracledb.connect(dsn=dsn)
@@ -172,13 +172,6 @@ def verifyLogin(email: str, password: str) -> user:
     print("Successfully verified user")
     return user
 
-
-# @TODO Needs to be completed.
-def update_items():
-    connection = oracledb.connect(dsn = dsn)
-
-    with connection.cursor() as cursor:
-        cursor.execute("insert into table participants")
 
 def return_all_items():
 
