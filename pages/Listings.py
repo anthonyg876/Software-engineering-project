@@ -29,7 +29,7 @@ else:
 
     for i in range(len(filterOptions)):
 
-        if filterOptions == "category":
+        if filterOptions[i] == "category":
             filter_col = st.multiselect(f"Filter {filterOptions[i]}", key=i, options=["Food", "Clothing", "Toiletries", "Medicine", "Misc"])
         
         else:
