@@ -172,6 +172,28 @@ def verifyLogin(email: str, password: str):
     print("Successfully verified user")
     return user
 
+def returnBusinessID(email: str):
+    # Attempt connection to Oracle db.
+    try: 
+        connection = oracledb.connect(dsn=dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()
+    # Check if the user even exists
+    cur.execute("select * from ownsbusiness where email = :email", [email])
+    number = cur.fetchall() 
+    if (len(number) != 1):
+        print("Business does not exist")
+        return None
+    
+    cur.execute("select bid from ownsbusiness where email = :email", [email])
+    bid = cur.fetchall()
+    if (len(bid) != 1):
+        print("Business does not exist")
+        return None
+    print("Successfully verified Business")
+    return bid
 
 def return_all_items():
 
@@ -468,6 +490,9 @@ def updateItemsQuantity(quantity: int, name: str, bid: int) -> str:
 
 if __name__ == "__main__":
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
+    #Returning business id, based on email
+
+
     #deleteParticipant("realNewEmail@RealNew.com")  
     #deleteParticipant("ag@gamil.com")   
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
@@ -506,6 +531,10 @@ if __name__ == "__main__":
     #updateItemsPostPrice(999, "tampon", 5)
     #updateItemsOriginalPrice(9999, "tampon", 5)
     #updateItemsQuantity(999, "tampon", 5)
+    #print("TEST PRINTING: ")
+    #print(verifyLogin("ag@gamil.com","boof"))
+    #print("TEST PRINTING for returnBusinessID: ")
+    #print(returnBusinessID("ag@gamil.com"))
     print("Participants")
     print()
 
