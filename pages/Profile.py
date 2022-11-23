@@ -196,7 +196,8 @@ def edit_profile_info():
                                 min_value = 0, max_value = 30000, step=1000, key=i)
         else:
             changed_profile_value = st.text_input(f"Change {editing_choices[i]}", key=i)
-            updated_info[editing_choices[i]] = changed_profile_value
+            
+        updated_info[editing_choices[i]] = changed_profile_value
 
     return updated_info
 
