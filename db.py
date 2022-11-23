@@ -183,7 +183,9 @@ def returnUserType(email: str):
     # Check the user's income
     cur.execute("select income from participants where email = :email", [email])
     income = cur.fetchall() 
-    if (len(income) == -1):
+    print("PRINTING INCOME:")
+    print(income)
+    if (income[0][0] == -1):
         #print("User with email does not exist")
         return "Seller"
     # Check if the user even exists
@@ -215,7 +217,7 @@ def returnBusinessID(email: str):
         print("Business does not exist")
         return None
     print("Successfully verified Business")
-    return bid[0]
+    return bid[0][0]
 
 def return_all_items():
 
@@ -513,6 +515,7 @@ def updateItemsQuantity(quantity: int, name: str, bid: int) -> str:
 if __name__ == "__main__":
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
     addParticipants("buyer@gmail.com", "buyer", "buyer", 22222, "pass1")
+    addParticipants("seller@gmail.com", "seller", "seller", -1, "pass1")
     #Returning business id, based on email
 
 
@@ -522,7 +525,7 @@ if __name__ == "__main__":
     #updateParticipants("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword")
     #updateEmail("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword","realNewEmail@RealNew.com")
     #deleteParticipant("realNewEmail@RealNew.com")
-    #addBusiness("ag@gamil.com", 5, "Business", "pass1", "address1", "33612", 123456789)
+    addBusiness("seller@gmail.com", 99, "sellerMart", "pass1", "address2", "33612", 123456789)
     #updateBusiness(1, "NEwBusiness", "NEwpass1", "Newaddress1", "33615", 00000000)
     #print(deleteBusiness(5))
     #print(updateParticipantsFirstName("mk@gmail.com","RealNewNEWMatthew"))
@@ -559,8 +562,9 @@ if __name__ == "__main__":
     #print("TEST PRINTING for returnBusinessID: ")
     #print(returnBusinessID("ag@gamil.com"))
     print("TEST PRINTING, BUYER or SELLER: ")
-    print(returnUserType("ag@gamil.com"))
-    print(returnUserType("buyer@gmail.com"))
+    #print(returnUserType("ag@gamil.com"))
+    #print(returnUserType("buyer@gmail.com"))
+    print(returnUserType("seller@gmail.com"))
     print("Participants")
     print()
 
