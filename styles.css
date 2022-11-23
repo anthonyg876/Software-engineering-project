@@ -13,6 +13,7 @@ h1 {
 .profile-info{
 
     font-style:italic;
+    text-align: left;
 
 }
 
@@ -150,4 +151,17 @@ h1 {
     margin-bottom: 8px;
     word-break: break-word;
 
+}
+
+.leftblock{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+.profName{
+    padding-top: 10%;
+    text-align: center;
 }
