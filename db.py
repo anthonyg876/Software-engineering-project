@@ -98,7 +98,7 @@ def deleteOwnsBusiness(email: str) -> None:
     connection.close()
     return output
 
-def deleteBusiness(id: int) -> None:
+def deleteBusiness(id: int) -> str:
     try:
         connection = oracledb.connect(dsn = dsn)
         print("Connected to database")
@@ -108,7 +108,7 @@ def deleteBusiness(id: int) -> None:
     try:
         cur.execute("delete from items where bid = :bid", [id])
         connection.commit()
-        output = "Deleted items from database."
+        output = "Deleted item from database."
     except:
         output = "Unable to deleted ownsbusiness from database"
     try:
@@ -214,6 +214,26 @@ def returnBusinessInfo(email: str):
         return None 
     return businessInfo[0]
 
+
+def returnBusinessInfoById(bid: int):
+
+    # Attempt connection to Oracle db.
+    try: 
+        connection = oracledb.connect(dsn=dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+
+    cur = connection.cursor()
+
+    cur.execute("select * from business where id = :id", [bid])
+    businessInfo = cur.fetchall()
+
+    if (len(businessInfo) != 1):
+        print("User is not associated with any business")
+        return None 
+    return businessInfo[0]
+
 def returnBusinessID(email: str):
     # Attempt connection to Oracle db.
     try: 
@@ -237,6 +257,27 @@ def returnBusinessID(email: str):
     print("Successfully verified Business")
     return bid[0][0]
 
+
+def return_participant_info(email: str):
+
+    # Attempt connection to Oracle db.
+    try: 
+        connection = oracledb.connect(dsn=dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+
+    cur = connection.cursor()
+
+    cur.execute("select * from participants where email = :email", [email])
+    user = cur.fetchall()
+
+    if (len(user) != 1):
+        print("User is not associated with any account")
+        return None 
+
+    return user[0]
+
 def return_all_items():
 
     try:
@@ -247,7 +288,7 @@ def return_all_items():
 
     cur = connection.cursor()
 
-    cur.execute("SELECT * FROM Items")
+    cur.execute("SELECT * FROM Items ORDER BY name")
 
     all_items = cur.fetchall()
     connection.close()
@@ -449,19 +490,29 @@ def updateBusinessPhoneNumber(id: int, phone_Number: str) -> str:
         output = "Unsuccessful"
     connection.close()
 
-def deleteItems(name: str, bid: int) -> None:
+def deleteItems(name: str, bid: int) -> str:
+
     try:
         connection = oracledb.connect(dsn = dsn)
         print("Connected to database")
     except:
         print("Was not able to connect to database")
+
     cur = connection.cursor()
+
+    cur.execute("select * from items where name = :name and bid = :bid", [name, bid])
+    items = cur.fetchall() 
+
+    if (len(items) == 0):
+        return "Item not found"
+
     try:
         cur.execute("delete from items where name = :name and bid = :bid", [name, bid])
         connection.commit()
-        output = "Deleted items from database."
+        output = "Deleted item from database."
     except:
         output = "Unable to delete items from database"
+
     connection.close()
     return output
 
@@ -472,14 +523,19 @@ def updateItemsCategory(category: str, name: str, bid: int) -> str:
         print("Connected to database")
     except:
         print("Was not able to connect to database")
+
     cur = connection.cursor()
+
     try:
         cur.execute("update items set category = :category where name = :name and bid = :bid", [category,name ,bid ])
         connection.commit()
-        output = "Updated business"
+        output = "Updated item"
     except:
         output = "Unsuccessful"
+
     connection.close()
+
+    return output
 
 def updateItemsPostPrice(postprice: float, name: str, bid: int) -> str:
     # Attempt connection to Oracle database.
@@ -488,14 +544,20 @@ def updateItemsPostPrice(postprice: float, name: str, bid: int) -> str:
         print("Connected to database")
     except:
         print("Was not able to connect to database")
+
     cur = connection.cursor()
+
     try:
         cur.execute("update items set postprice = :postprice where name = :name and bid = :bid", [postprice,name ,bid ])
         connection.commit()
-        output = "Updated business"
+        output = "Updated item"
     except:
         output = "Unsuccessful"
     connection.close()
+
+    return output
+
+
 def updateItemsOriginalPrice(originalprice: float, name: str, bid: int) -> str:
     # Attempt connection to Oracle database.
     try:
@@ -503,14 +565,20 @@ def updateItemsOriginalPrice(originalprice: float, name: str, bid: int) -> str:
         print("Connected to database")
     except:
         print("Was not able to connect to database")
+
     cur = connection.cursor()
+
     try:
         cur.execute("update items set originalprice = :originalprice where name = :name and bid = :bid", [originalprice,name ,bid ])
         connection.commit()
-        output = "Updated business"
+        output = "Updated item"
     except:
         output = "Unsuccessful"
-    connection.close()  
+
+    connection.close()
+
+    return output
+
 def updateItemsQuantity(quantity: int, name: str, bid: int) -> str:
     # Attempt connection to Oracle database.
     try:
@@ -518,14 +586,41 @@ def updateItemsQuantity(quantity: int, name: str, bid: int) -> str:
         print("Connected to database")
     except:
         print("Was not able to connect to database")
+
     cur = connection.cursor()
+
     try:
         cur.execute("update items set quantity = :quantity where name = :name and bid = :bid", [quantity,name ,bid ])
         connection.commit()
-        output = "Updated business"
+        output = "Updated item"
     except:
         output = "Unsuccessful"
+
     connection.close()  
+
+    return output
+
+
+def find_item(name: str, bid: int) -> str:
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+
+    cur = connection.cursor()
+
+    cur.execute("select * from items where name = :name and bid = :bid", [name ,bid ])
+
+    items = cur.fetchall() 
+
+    if (len(items) == 0):
+        return "Item not found"
+
+    connection.close()  
+
+    return "Successful"
     
 # def addBusiness(email: str, id: int, name: str, password: str, address: str, county: str, phoneNumber: int)
 # def addItem(name: str, category: str, postPrice: float, originalPrice: float, quantity: int, bId: int)-

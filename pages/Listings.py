@@ -1,23 +1,101 @@
 import streamlit as st
+import db
 
 def categoryImg(category):
 
-    if category == "hygienics":
+    if category == "Toiletries":
         st.image("img/hygienic.png",use_column_width="always")
 
-    elif category == "medicine":
+    elif category == "Medicine":
         st.image("img/medicine.png",use_column_width="always")
 
-    elif category == "food":
+    elif category == "Food":
         st.image("img/shopping-bag.png",use_column_width="always")
 
-    elif category == "clothing":
+    elif category == "Clothing":
         st.image("img/shirts.png",use_column_width="always")
 
     else:
         st.image("img/jelly-beans.png",use_column_width="always")
 
 
+
+def add_item():
+
+    email = st.experimental_get_query_params()["email"][0]
+    bID = db.returnBusinessID(email)
+
+    item_name = st.text_input("Item Name")
+    category = st.selectbox("Item Category", options=["Food", "Clothing", "Medicine", "Toiletries", "Misc"])
+    post_price = st.number_input("Post Price", min_value=0.0, max_value=50000.0, step=.01)
+    original_price = st.number_input("Original Price", min_value=0.0, max_value=50000.0, step=.01)
+    quantity = st.number_input("Quantity", min_value = 1, max_value = 50000, step=1)
+
+    if st.button("Save Item"):
+
+        if item_name == "":
+            st.write("Item name is blank")
+
+        else:
+
+            item_added = db.addItem(item_name, category, post_price, original_price, quantity, bID)
+
+            if item_added == "Inserted item into database.":
+                st.write("You saved an item. Collect $200.")
+            else:
+                st.write("Unable to save item")
+
+
+def update_item(updated_item_info):
+
+    successful = True
+
+    email = st.experimental_get_query_params()["email"][0]
+    bID = db.returnBusinessID(email)
+
+    item_name = updated_item_info["Item Name"]
+
+    if item_name == "":
+        st.write("Item name is blank")
+        return
+
+    if db.find_item(item_name, bID) == "Item not found":
+        st.write("Item not found")
+        return
+
+    for k, v in updated_item_info.items():
+
+        if k == "Category":
+            if db.updateItemsCategory(v, item_name, bID) != "Updated item":
+                successful = False
+    
+        elif k == "Post Price":
+            if db.updateItemsPostPrice(v, item_name, bID) != "Updated item":
+                successful = False
+        
+        elif k == "Original Price":
+            if db.updateItemsOriginalPrice(v, item_name, bID) != "Updated item":
+                successful = False
+        
+        elif k == "Quantity":
+            if db.updateItemsQuantity(v, item_name, bID) != "Updated item":
+                successful = False
+
+    if successful:
+        st.write("Item Updated")
+    else:
+        st.write("Could not update item")
+
+
+def delete_item(item_name):
+
+    email = st.experimental_get_query_params()["email"][0]
+    bID = db.returnBusinessID(email)
+
+    st.write(db.deleteItems(item_name, bID))
+
+
+    
 if st.experimental_get_query_params()["user"][0] == "no":
     st.title("Login to see this page")
 
@@ -42,122 +120,127 @@ else:
 
     st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
-    listing_button = st.button("Show listings")
+    if st.button("Show listings"):
 
-    st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
+        st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
-    price1 = 20
-    quatitiy = 10
-    county = "pinellas"
-    address = "12 buckel my shoue,Tampa,FL"
-    items = 0
-    phone = 1111111
-    cat = "food"
+        col1, col2, col3 = st.columns(3)
 
-    col1, col2, col3 = st.columns(3)
+        items = db.return_all_items()
 
-    numItems = 19
+        for i in range(len(items)):
 
-    for i in range(numItems):
+            item_name = items[i][0]
+            category = items[i][1]
+            price = items[i][2]
+            quantity = items[i][4]
+            bID = items[i][5]
 
-        if i % 3 == 0:
+            business_info = db.returnBusinessInfoById(bID)
 
-            with col1:
-                st.markdown("""<p class= "itemHead">CVS</h1>
-                                <p class = "titleHead">Tooth paste</h2>""",
-                                unsafe_allow_html=True)
-                categoryImg(cat)
-                st.markdown(f"""
-                                <p class = "itemInfo">price ${price1}</h3>
-                                <p class = "itemInfo"> Quantity {quatitiy} </h3>
-                                <p class = "itemInfo">county : {county}</h3>
-                                <p class = "itemInfo">address {address}</h3>
-                                <p class = "itemInfo">phone # {phone}</h3>""",
-                                unsafe_allow_html=True)
+            business_name = business_info[1]
+            address = business_info[3]
+            county = business_info[4]
+            phone = business_info[5]
 
-                st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
+            if i % 3 == 0:
 
-        elif i % 3 == 1:
+                with col1:
+                    st.markdown(f"""<p class= "itemHead">{business_name}</p>
+                                    <p class = "titleHead">{item_name}</p>""",
+                                    unsafe_allow_html=True)
+                    categoryImg(category)
+                    st.markdown(f"""
+                                    <p class = "itemInfo">Price -- ${format(price, ".2f")}</p>
+                                    <p class = "itemInfo">Quantity -- {quantity} </p>
+                                    <p class = "itemInfo">County -- {county}</p>
+                                    <p class = "itemInfo">Address -- {address}</p>
+                                    <p class = "itemInfo">Phone # -- {phone}</p>""",
+                                    unsafe_allow_html=True)
 
-            with col2:
-                st.markdown("""<p class= "itemHead">CVS</h1>
-                                <p class = "titleHead">Tooth paste</h2>""",
-                                unsafe_allow_html=True)
-                categoryImg(cat)
-                st.markdown(f"""
-                                <p class = "itemInfo">price ${price1}</h3>
-                                <p class = "itemInfo"> Quantity {quatitiy} </h3>
-                                <p class = "itemInfo">county : {county}</h3>
-                                <p class = "itemInfo">address {address}</h3>
-                                <p class = "itemInfo">phone # {phone}</h3>""",
-                                unsafe_allow_html=True)
+                    st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
-                st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
+            elif i % 3 == 1:
 
-        else:
-            
-            with col3:
-                st.markdown("""<p class= "itemHead">CVS</h1>
-                                <p class = "titleHead">Tooth paste</h2>""",
-                                unsafe_allow_html=True)
-                categoryImg(cat)
-                st.markdown(f"""
-                                <p class = "itemInfo">price ${price1}</h3>
-                                <p class = "itemInfo"> Quantity {quatitiy} </h3>
-                                <p class = "itemInfo">county : {county}</h3>
-                                <p class = "itemInfo">address {address}</h3>
-                                <p class = "itemInfo">phone # {phone}</h3>""",
-                                unsafe_allow_html=True)
+                with col2:
+                    st.markdown(f"""<p class= "itemHead">{business_name}</p>
+                                    <p class = "titleHead">{item_name}</p>""",
+                                    unsafe_allow_html=True)
+                    categoryImg(category)
+                    st.markdown(f"""
+                                    <p class = "itemInfo">Price -- ${format(price, ".2f")}</p>
+                                    <p class = "itemInfo">Quantity -- {quantity} </p>
+                                    <p class = "itemInfo">County -- {county}</p>
+                                    <p class = "itemInfo">Address -- {address}</p>
+                                    <p class = "itemInfo">Phone # -- {phone}</p>""",
+                                    unsafe_allow_html=True)
 
-                st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
-    
-    st.title("Edit your items")
-    item_choices = st.radio(" ", options=["Add Item", "Update Item", "Delete Item"])
-
-    if item_choices == "Add Item":
-
-        item_name = st.text_input("Item Name")
-        category= st.selectbox("Item Category", options=["Food", "Clothing", "Medicine", "Toiletries", "Misc"])
-        post_price = st.number_input("Post Price", min_value=0.0, max_value=50000.0, step=.01)
-        original_price = st.number_input("Original Price", min_value=0.0, max_value=50000.0, step=.01)
-
-        if st.button("Save Item"):
-            st.write("You saved an item. Collect $200.")
-
-        
-    elif item_choices == "Update Item":
-
-        updated_item_info = {}
-
-        item_update_options = st.multiselect("Choose what you'd like to change", 
-                    options=["Item Name", "Category", "Post Price", "Original Price", "Quantity"])
-
-        for i in range(len(item_update_options)):
-
-            if item_update_options[i] == "Post Price" or item_update_options[i] == "Original Price":
-                changed_item_value = st.number_input(f"Change {item_update_options[i]}", 
-                                min_value = 0.0, max_value = 50000.0, step=.01, key=i)
-
-            elif item_update_options[i] == "Quantity":
-                changed_item_value = st.number_input(f"Change {item_update_options[i]}", 
-                                min_value = 0, max_value = 50000, step=1, key=i)
-
-            elif item_update_options[i] == "Category":
-                changed_item_value= st.selectbox("Item Category", options=["Food", "Clothing", "Medicine", "Toiletries", "Misc"])
+                    st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
             else:
-                changed_item_value = st.text_input(f"Change {item_update_options[i]}", key=i)
+                
+                with col3:
+                    st.markdown(f"""<p class= "itemHead">{business_name}</p>
+                                    <p class = "titleHead">{item_name}</p>""",
+                                    unsafe_allow_html=True)
+                    categoryImg(category)
+                    st.markdown(f"""
+                                    <p class = "itemInfo">Price -- ${format(price, ".2f")}</p>
+                                    <p class = "itemInfo">Quantity -- {quantity} </p>
+                                    <p class = "itemInfo">County -- {county}</p>
+                                    <p class = "itemInfo">Address -- {address}</p>
+                                    <p class = "itemInfo">Phone # -- {phone}</p>""",
+                                    unsafe_allow_html=True)
+
+                    st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
+    
+
+    user_type = st.experimental_get_query_params()["user"][0]
+
+    if user_type == "seller" or  user_type == "both":
+        
+        st.title("Edit your items")
+        item_choices = st.radio(" ", options=["Add Item", "Update Item", "Delete Item"])
+
+        if item_choices == "Add Item":
+            add_item()
             
-            updated_item_info[item_update_options[i]] = changed_item_value
+        elif item_choices == "Update Item":
 
-        if st.button("Update item"):
-            st.write("Item has been updated")
+            updated_item_info = {}
 
-    else:
-        item_name = st.text_input("Enter item name that you want deleted.")
+            updated_item_info["Item Name"] = st.text_input("Enter in the name of the item you want to change")
 
-        if st.button("Delete Item"):
-            st.write(item_name, " was deleted")
+            item_update_options = st.multiselect("Choose what you'd like to change", 
+                        options=["Category", "Post Price", "Original Price", "Quantity"])
+
+            for i in range(len(item_update_options)):
+
+                if item_update_options[i] == "Post Price" or item_update_options[i] == "Original Price":
+                    changed_item_value = st.number_input(f"Change {item_update_options[i]}", 
+                                    min_value = 0.0, max_value = 50000.0, step=.01, key=i)
+
+                elif item_update_options[i] == "Quantity":
+                    changed_item_value = st.number_input(f"Change {item_update_options[i]}", 
+                                    min_value = 0, max_value = 50000, step=1, key=i)
+
+                elif item_update_options[i] == "Category":
+                    changed_item_value= st.selectbox("Item Category", options=["Food", "Clothing", "Medicine", "Toiletries", "Misc"])
+
+                else:
+                    changed_item_value = st.text_input(f"Change {item_update_options[i]}", key=i)
+                
+                updated_item_info[item_update_options[i]] = changed_item_value
+
+            if st.button("Update item"):
+                update_item(updated_item_info)
+
+        else:
+
+            item_name = st.text_input("Enter item name that you want deleted.")
+
+            if st.button("Delete Item"):
+                delete_item(item_name)
 
 
 with open("footer.html") as f:
