@@ -5,26 +5,26 @@ drop table ownsBusiness cascade constraints;
 ​
 create table Business(
     id int, 
-    name varchar(30),
-    password varchar(20),
-    address varchar(30),
-    county varchar(30),
+    name varchar(255),
+    password varchar(255),
+    address varchar(255),
+    county varchar(255),
     phone_number int,
     primary key(id)
     );
     
 create table participants(
-    email varchar(30),
-    firstName varchar(30),
-    lastName varchar(30),
+    email varchar(255),
+    firstName varchar(255),
+    lastName varchar(255),
     income int,
-    password varchar(30),
+    password varchar(255),
     primary key(email)
     );
     
 create table items(
-    name varchar(30),
-    category varchar(30),
+    name varchar(255),
+    category varchar(255),
     postPrice numeric (8, 2),
     originalPrice numeric(8,2),
     quantity int,
@@ -34,7 +34,7 @@ create table items(
     );
     
 create table ownsBusiness(
-    email varchar(30),
+    email varchar(255),
     bId int,
     foreign key(email) references participants(email),
     foreign key(bId) references Business(id),
