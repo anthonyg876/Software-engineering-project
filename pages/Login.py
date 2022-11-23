@@ -4,8 +4,29 @@ import db
 if "user" not in st.experimental_get_query_params():
     st.experimental_set_query_params(user="no")
 
-def login():
-    st.experimental_set_query_params(user="both")
+def login(email, login):
+
+    user = db.verifyLogin(email, password)
+
+    if user is None:
+        st.write("Your email and/or password are incorrect")
+
+    else:
+
+        user_email = user[0][0]
+
+        user_type = db.returnUserType(email)
+
+        if user_type == "Both":
+            st.experimental_set_query_params(user="both", email=user_email)
+
+        elif user_type == "Seller":
+            st.experimental_set_query_params(user="seller", email=user_email)
+
+        elif user_type == "Buyer":
+            st.experimental_set_query_params(user="buyer", email=user_email)
+
+        st.write("You are logged in")
 
 def seller_account_form():
 
@@ -119,7 +140,7 @@ with account_tab:
 
                         if successful_account:
 
-                            if db.addUser(
+                            if db.addParticipants(
                                     participant_values["email"],
                                     participant_values["first_name"],
                                     participant_values["last_name"],
@@ -169,7 +190,7 @@ with account_tab:
 
                         if successful_account:
 
-                            if db.addUser(
+                            if db.addParticipants(
                                 participant_values["email"],
                                 participant_values["first_name"],
                                 participant_values["last_name"],
@@ -207,7 +228,7 @@ with account_tab:
                             successful_account = False
 
                         else:
-                            if db.addUser(
+                            if db.addParticipants(
                                 participant_values["email"],
                                 participant_values["first_name"],
                                 participant_values["last_name"],
@@ -246,11 +267,11 @@ with login_tab:
 
         st.markdown("""<div class="emptyDiv"></div>""", unsafe_allow_html=True)
 
-        username = st.text_input("Username")
+        email = st.text_input("Email")
         password = st.text_input("Password", type="password")
 
-        if st.button("Login", on_click=login):
-            st.write("You are now logged in")
+        if st.button("Login"):
+            login(email, password)
 
     else:
         st.title("You're logged in")
