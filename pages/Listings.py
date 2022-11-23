@@ -1,8 +1,5 @@
 import streamlit as st
 
-
-
-
 def categoryImg(category):
 
     if category == "hygienics":
@@ -20,32 +17,6 @@ def categoryImg(category):
     else:
         st.image("img/jelly-beans.png",use_column_width="always")
 
-filterOptions = st.multiselect("Select the filter category",
-                        options=["catagory", "county",
-                        "Business name"])
-
-
-
-for i in range(len(filterOptions)):
-    changed_profile_value = st.text_input(f"Change {filterOptions[i]}", key=i)
-    st.write("you wrote",changed_profile_value)
-
-price = st.slider("Listings price", value = (0,100), step = 1)
-st.write(price) #debuging
-
-st.title("Listings")
-
-listingbutton = st.button("Show listings")
-
-price1 = 20
-quatitiy = 10
-county = "pinellas"
-address = "12 buckel my shoue,Tampa,FL"
-items = 0
-phone = 1111111
-cat = "food"
-
-col1, col2, col3 = st.columns(3)
 
 if st.experimental_get_query_params()["user"][0] == "no":
     st.title("Login to see this page")
@@ -57,7 +28,13 @@ else:
                             "Business name"])
 
     for i in range(len(filterOptions)):
-        filter_col = st.multiselect(f"Filter {filterOptions[i]}", key=i, options=["sample", "sample2", "Sample3"])
+
+        if filterOptions == "category":
+            filter_col = st.multiselect(f"Filter {filterOptions[i]}", key=i, options=["Food", "Clothing", "Toiletries", "Medicine", "Misc"])
+        
+        else:
+            filter_col = st.multiselect(f"Filter {filterOptions[i]}", key=i, options=["sample", "sample2", "Sample3"])
+
         st.write("you wrote", filter_col)
 
     price = st.slider("Listings price", value = (0,100), step = 1)
@@ -182,62 +159,6 @@ else:
         if st.button("Delete Item"):
             st.write(item_name, " was deleted")
 
-
-=======
-numItems = 19
-
-for i in range(numItems):
-
-    if i % 3 == 0:
-
-        with col1:
-            st.markdown("""<p class= "itemHead">CVS</h1>
-                            <p class = "titleHead">Tooth paste</h2>""",
-                            unsafe_allow_html=True)
-            categoryImg(cat)
-            st.markdown(f"""
-                            <p class = "itemInfo">price ${price1}</h3>
-                            <p class = "itemInfo"> Quantity {quatitiy} </h3>
-                            <p class = "itemInfo">county : {county}</h3>
-                            <p class = "itemInfo">address {address}</h3>
-                            <p class = "itemInfo">phone # {phone}</h3>""",
-                            unsafe_allow_html=True)
-
-            st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
-
-    elif i % 3 == 1:
-
-        with col2:
-            st.markdown("""<p class= "itemHead">CVS</h1>
-                            <p class = "titleHead">Tooth paste</h2>""",
-                            unsafe_allow_html=True)
-            categoryImg(cat)
-            st.markdown(f"""
-                            <p class = "itemInfo">price ${price1}</h3>
-                            <p class = "itemInfo"> Quantity {quatitiy} </h3>
-                            <p class = "itemInfo">county : {county}</h3>
-                            <p class = "itemInfo">address {address}</h3>
-                            <p class = "itemInfo">phone # {phone}</h3>""",
-                            unsafe_allow_html=True)
-
-            st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
-
-    else:
-        
-        with col3:
-            st.markdown("""<p class= "itemHead">CVS</h1>
-                            <p class = "titleHead">Tooth paste</h2>""",
-                            unsafe_allow_html=True)
-            categoryImg(cat)
-            st.markdown(f"""
-                            <p class = "itemInfo">price ${price1}</h3>
-                            <p class = "itemInfo"> Quantity {quatitiy} </h3>
-                            <p class = "itemInfo">county : {county}</h3>
-                            <p class = "itemInfo">address {address}</h3>
-                            <p class = "itemInfo">phone # {phone}</h3>""",
-                            unsafe_allow_html=True)
-
-            st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
 with open("footer.html") as f:
     foot = f.read()
