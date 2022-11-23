@@ -32,15 +32,17 @@ else:
                             "Business name"])
 
     for i in range(len(filterOptions)):
-        filter_col = st.text_input(f"Filter {filterOptions[i]}", key=i)
+        filter_col = st.multiselect(f"Filter {filterOptions[i]}", key=i, options=["sample", "sample2", "Sample3"])
         st.write("you wrote", filter_col)
 
     price = st.slider("Listings price", value = (0,100), step = 1)
     st.write(price) #debuging
 
-    st.title("Listings")
+    st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
-    listingbutton = st.button("Show listings")
+    listing_button = st.button("Show listings")
+
+    st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
     price1 = 20
     quatitiy = 10
@@ -106,6 +108,56 @@ else:
                                 unsafe_allow_html=True)
 
                 st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
+    
+    st.title("Edit your items")
+    item_choices = st.radio(" ", options=["Add Item", "Update Item", "Delete Item"])
+
+    if item_choices == "Add Item":
+
+        item_name = st.text_input("Item Name")
+        category= st.selectbox("Item Category", options=["Food", "Clothing", "Medicine", "Toiletries", "Misc"])
+        post_price = st.number_input("Post Price", min_value=0.0, max_value=50000.0, step=.01)
+        original_price = st.number_input("Original Price", min_value=0.0, max_value=50000.0, step=.01)
+
+        if st.button("Save Item"):
+            st.write("You saved an item. Collect $200.")
+
+        
+    elif item_choices == "Update Item":
+
+        updated_item_info = {}
+
+        item_update_options = st.multiselect("Choose what you'd like to change", 
+                    options=["Item Name", "Category", "Post Price", "Original Price", "Quantity"])
+
+        for i in range(len(item_update_options)):
+
+            if item_update_options[i] == "Post Price" or item_update_options[i] == "Original Price":
+                changed_item_value = st.number_input(f"Change {item_update_options[i]}", 
+                                min_value = 0.0, max_value = 50000.0, step=.01, key=i)
+
+            elif item_update_options[i] == "Quantity":
+                changed_item_value = st.number_input(f"Change {item_update_options[i]}", 
+                                min_value = 0, max_value = 50000, step=1, key=i)
+
+            elif item_update_options[i] == "Category":
+                changed_item_value= st.selectbox("Item Category", options=["Food", "Clothing", "Medicine", "Toiletries", "Misc"])
+
+            else:
+                changed_item_value = st.text_input(f"Change {item_update_options[i]}", key=i)
+            
+            updated_item_info[item_update_options[i]] = changed_item_value
+
+        if st.button("Update item"):
+            st.write("Item has been updated")
+
+    else:
+        item_name = st.text_input("Enter item name that you want deleted.")
+
+        if st.button("Delete Item"):
+            st.write(item_name, " was deleted")
+
+
 
 with open("footer.html") as f:
     foot = f.read()
