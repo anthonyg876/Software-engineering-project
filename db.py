@@ -183,8 +183,8 @@ def returnUserType(email: str):
     # Check the user's income
     cur.execute("select income from participants where email = :email", [email])
     income = cur.fetchall() 
-    print("PRINTING INCOME:")
-    print(income)
+    #print("PRINTING INCOME:")
+    #print(income)
     if (income[0][0] == -1):
         #print("User with email does not exist")
         return "Seller"
@@ -195,6 +195,24 @@ def returnUserType(email: str):
         print("User is not associated with any business")
         return "Buyer" 
     return "Both"
+
+def returnBusinessInfo(email: str):
+    # Attempt connection to Oracle db.
+    try: 
+        connection = oracledb.connect(dsn=dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()
+    # Check the user's income
+    cur.execute("select bid from ownsbusiness where email = :email", [email])
+    bid = cur.fetchall()[0][0] 
+    cur.execute("select * from business where id = :id", [bid])
+    businessInfo = cur.fetchall()
+    if (len(businessInfo) != 1):
+        print("User is not associated with any business")
+        return None 
+    return businessInfo[0]
 
 def returnBusinessID(email: str):
     # Attempt connection to Oracle db.
@@ -514,18 +532,16 @@ def updateItemsQuantity(quantity: int, name: str, bid: int) -> str:
 
 if __name__ == "__main__":
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
-    addParticipants("buyer@gmail.com", "buyer", "buyer", 22222, "pass1")
-    addParticipants("seller@gmail.com", "seller", "seller", -1, "pass1")
+    #addParticipants("buyer@gmail.com", "buyer", "buyer", 22222, "pass1")
+    #addParticipants("seller@gmail.com", "seller", "seller", -1, "pass1")
     #Returning business id, based on email
-
-
     #deleteParticipant("realNewEmail@RealNew.com")  
     #deleteParticipant("ag@gamil.com")   
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
     #updateParticipants("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword")
     #updateEmail("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword","realNewEmail@RealNew.com")
     #deleteParticipant("realNewEmail@RealNew.com")
-    addBusiness("seller@gmail.com", 99, "sellerMart", "pass1", "address2", "33612", 123456789)
+    #addBusiness("seller@gmail.com", 99, "sellerMart", "pass1", "address2", "33612", 123456789)
     #updateBusiness(1, "NEwBusiness", "NEwpass1", "Newaddress1", "33615", 00000000)
     #print(deleteBusiness(5))
     #print(updateParticipantsFirstName("mk@gmail.com","RealNewNEWMatthew"))
@@ -561,10 +577,12 @@ if __name__ == "__main__":
     #print(verifyLogin("ag@gamil.com","boof"))
     #print("TEST PRINTING for returnBusinessID: ")
     #print(returnBusinessID("ag@gamil.com"))
-    print("TEST PRINTING, BUYER or SELLER: ")
+    #print("TEST PRINTING, BUYER or SELLER: ")
     #print(returnUserType("ag@gamil.com"))
     #print(returnUserType("buyer@gmail.com"))
-    print(returnUserType("seller@gmail.com"))
+    #print(returnUserType("seller@gmail.com"))
+    print("TEST PRINTING, returnBusinessInfo: ")
+    print(returnBusinessInfo("ag@gamil.com"))
     print("Participants")
     print()
 
