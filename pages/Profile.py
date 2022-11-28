@@ -97,7 +97,6 @@ def display_seller_data():
     income = user_info[3]
 
     
-
     with profCol1:
         st.markdown(f"""
         <div class ="leftblock">
@@ -186,7 +185,7 @@ def edit_profile_info():
                     options=["First Name", "Last Name", "Income"])
     else:
         editing_choices = st.multiselect("Choose what you'd like to change", 
-                    options=[" Business Name", "Address", "County", "Phone Number", 
+                    options=["Business Name", "Address", "County", "Phone Number", 
                     "First Name", "Last Name", "Income"])
 
     for i in range(len(editing_choices)):
