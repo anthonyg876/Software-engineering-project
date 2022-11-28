@@ -125,7 +125,12 @@ def filter_interface():
     price = st.slider("Listings price", value = (0,100), step = 1)
     st.write(price) #debuging
 
-    st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
+def sorting_buttons():
+
+    alphabetical = st.radio("Sort Items Alphabetically: ", options=["A-Z", "Z-A"])
+    price_sort = st.radio("Sort Items by Price: ", options=["Ascending", "Descending"])
+
+    return alphabetical, price_sort
 
 def listing_heading(business_name, item_name):
 
@@ -178,6 +183,12 @@ if st.experimental_get_query_params()["user"][0] == "no":
 else:
 
     filter_interface()
+
+    alphabetical, price_sort = sorting_buttons()
+
+    search_item = st.text_input("Enter item name to search")
+
+    st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
     if st.button("Show listings"):
 
