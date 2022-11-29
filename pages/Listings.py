@@ -1,5 +1,6 @@
 import streamlit as st
 import db
+import math
 
 def categoryImg(category):
 
@@ -102,35 +103,69 @@ def delete_item(item_name):
 
 def filter_interface():
 
+    filter_dict = {
+
+        "Category" : [],
+        "County" : [],
+        "Business Name" : []
+    }
+
     user_type = st.experimental_get_query_params()["user"][0] 
 
     if user_type == "both" or user_type == "buyer":
         options = ["Category", "County", "Business name"]
+
     else:
+
         options = ["Category"]
 
-    filterOptions = st.multiselect("Select the filter category",
+        business_email = st.experimental_get_query_params()["email"][0] 
+
+        business_name = db.returnBusinessInfo(business_email)[1]
+        business_county = db.returnBusinessInfo(business_email)[4]
+
+        filter_dict["Business Name"] = business_name
+        filter_dict["County"] = business_county
+
+    filterOptions = st.multiselect("Select how you want to filter",
                             options=options)
 
     for i in range(len(filterOptions)):
 
         if filterOptions[i] == "Category":
-            filter_col = st.multiselect(f"Filter {filterOptions[i]}", key=i, options=["Food", "Clothing", "Toiletries", "Medicine", "Misc"])
+
+            filter_category = st.multiselect("Filter Category", key=i, options=["Food", "Clothing", "Toiletries", "Medicine", "Misc"])
+            filter_dict["Category"] = filter_category
             
+        elif filterOptions[i] == "County":
+
+            filter_county = st.multiselect("Filter County", key=i, options=[county[0] for county in db.distinct_counties()])
+            filter_dict["County"] = filter_county
+
         else:
-            filter_col = st.multiselect(f"Filter {filterOptions[i]}", key=i, options=["sample", "sample2", "Sample3"])
 
-        st.write("you wrote", filter_col)
+            filter_business = st.multiselect("Filter Business Name", key=i, options=[business[0] for business in db.distinct_business_names()])
+            filter_dict["Business Name"] = filter_business
 
-    price = st.slider("Listings price", value = (0,100), step = 1)
-    st.write(price) #debuging
+    max_item_price = math.ceil(db.max_price())
+
+    price = st.slider("Listings price", value = (0, max_item_price), step = 1)
+
+    filter_dict["price"] = price
+
+    return filter_dict
 
 def sorting_buttons():
 
-    alphabetical = st.radio("Sort Items Alphabetically: ", options=["A-Z", "Z-A"])
-    price_sort = st.radio("Sort Items by Price: ", options=["Ascending", "Descending"])
+    sort_type = st.selectbox("Select Sorting Type", options=["Alphabetical", "Price"])
+    sort_order = st.radio("Order for Sorting ", options=["Ascending", "Descending"])
 
-    return alphabetical, price_sort
+    if sort_order == "Ascending":
+        order = "ASC"
+    else:
+        order = "DESC"
+
+    return sort_type, order
 
 def listing_heading(business_name, item_name):
 
@@ -182,11 +217,11 @@ if st.experimental_get_query_params()["user"][0] == "no":
 
 else:
 
-    filter_interface()
+    filter_dict = filter_interface()
 
-    alphabetical, price_sort = sorting_buttons()
+    sort_type, sort_order = sorting_buttons()
 
-    search_item = st.text_input("Enter item name to search")
+    search_item = st.text_input("Enter item name to search").lower()
 
     st.markdown("""<div class="emptyItemDiv"></div>""", unsafe_allow_html=True)
 
@@ -196,9 +231,24 @@ else:
 
         col1, col2, col3 = st.columns(3)
 
-        items = db.return_all_items()
+        categories = filter_dict["Category"]
+        counties = filter_dict["County"]
+        business_names = filter_dict["Business Name"]
+
+        min_price = filter_dict["price"][0]
+        max_price = filter_dict["price"][1]
+
+
+
+        items = db.filter_items(categories, counties, business_names, 
+                                min_price, max_price, search_item, sort_type, sort_order)
+
+        if len(items) == 0:
+            st.markdown("""<p class="no-items">No Items</p>""", unsafe_allow_html=True)
 
         for i in range(len(items)):
+
+            print(items[i])
 
             item_name = items[i][0]
             category = items[i][1]
