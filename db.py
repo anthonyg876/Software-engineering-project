@@ -639,6 +639,17 @@ def find_item(name: str, bid: int) -> str:
 
     return "Successful"
 
+def displayLeaderboard(topRows: int):
+    try: 
+        connection = oracledb.connect(dsn=dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()
+    cur.execute("select business.name, sum(originalprice - postprice) as Donation from business inner join items on business.id = items.bid group by business.name order by Donation desc fetch first :topRows rows only", [topRows])
+    itemInfo = cur.fetchall()
+    return itemInfo
+
 if __name__ == "__main__":
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
     #addParticipants("buyer@gmail.com", "buyer", "buyer", 22222, "pass1")
@@ -695,7 +706,7 @@ if __name__ == "__main__":
     # print("Participants")
     # addParticipants("ag1941@gmail.com", "Anthony", "Bologni", 25, "cbd123")
     verifyLogin("ag1941@gmail.com", "cbd123")
-
+    print(displayLeaderboard(2))
 
     # for row in return_all_participants():
         # print(row)
