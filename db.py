@@ -1,4 +1,5 @@
 import oracledb
+import hashlib
 
 # Variables needed for the login.
 username = "hlee3"
@@ -8,11 +9,22 @@ port = 1521
 service_name = "orcl"
 
 dsn = f'{username}/{userpwd}@{host}:{port}/{service_name}'    
+salt = "5gz"
+
+def hashPassword(password: str) -> str:
+    password = password + salt
+    hashed = hashlib.md5(password.encode())
+    # print("Hashed Password is: " + hashed)
+    return hashed
+
 
 '''
 Adds user to the database.
 '''
 def addParticipants(email: str, firstName: str, lastName: str, income: int, password: str) -> str:
+
+    hashed = hashPassword(password)
+
     # Attempt connection to Oracle database.
     try:
         connection = oracledb.connect(dsn = dsn)
@@ -22,7 +34,7 @@ def addParticipants(email: str, firstName: str, lastName: str, income: int, pass
         print("Was not able to connect to the database.")
     cur = connection.cursor()
     try:
-        cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [email, firstName, lastName, income, password])
+        cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [email, firstName, lastName, income, hashed.hexdigest()])
         connection.commit()
         output = "Added user into database"
     except:
@@ -33,6 +45,8 @@ def addParticipants(email: str, firstName: str, lastName: str, income: int, pass
 Adds business to db
 '''
 def addBusiness(email: str, id: int, name: str, password: str, address: str, county: str, phoneNumber: int) -> str:
+
+    password = hashPassword(password)
     # Attempt connection to Oracle database.
     try:
         connection = oracledb.connect(dsn = dsn)
@@ -150,6 +164,9 @@ def addItem(name: str, category: str, postPrice: float, originalPrice: float, qu
 Verifies user credentials and returns user info.
 '''
 def verifyLogin(email: str, password: str):
+
+    password = hashPassword(password)
+
     # Attempt connection to Oracle db.
     try: 
         connection = oracledb.connect(dsn=dsn)
@@ -164,7 +181,7 @@ def verifyLogin(email: str, password: str):
         print("User with email does not exist")
         return None
     
-    cur.execute("select * from participants where email = :email and password = :password", [email, password])
+    cur.execute("select * from participants where email = :email and password = :password", [email, password.hexdigest()])
     user = cur.fetchall()
     if (len(user) != 1):
         print("Password does not match, try again")
@@ -621,9 +638,6 @@ def find_item(name: str, bid: int) -> str:
     connection.close()  
 
     return "Successful"
-    
-# def addBusiness(email: str, id: int, name: str, password: str, address: str, county: str, phoneNumber: int)
-# def addItem(name: str, category: str, postPrice: float, originalPrice: float, quantity: int, bId: int)-
 
 if __name__ == "__main__":
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
@@ -676,11 +690,13 @@ if __name__ == "__main__":
     #print(returnUserType("ag@gamil.com"))
     #print(returnUserType("buyer@gmail.com"))
     #print(returnUserType("seller@gmail.com"))
-    print("TEST PRINTING, returnBusinessInfo: ")
-    print(returnBusinessInfo("ag@gamil.com"))
-    print("Participants")
-    print()
+    # print("TEST PRINTING, returnBusinessInfo: ")
+    # print(returnBusinessInfo("ag@gamil.com"))
+    # print("Participants")
+    # addParticipants("ag1941@gmail.com", "Anthony", "Bologni", 25, "cbd123")
+    verifyLogin("ag1941@gmail.com", "cbd123")
 
-    for row in return_all_participants():
-        print(row)
+
+    # for row in return_all_participants():
+        # print(row)
 
