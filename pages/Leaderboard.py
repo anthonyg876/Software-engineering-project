@@ -10,9 +10,9 @@ if "balloons" not in st.session_state:
 
 st.title("Leaderboard")
 
-names = db.distinct_business_names()
+ids = db.distinct_business_ids()
 
-number_names = st.slider("Number of Businesses", min_value=1, max_value=len(names))
+number_names = st.slider("Number of Businesses", min_value=1, max_value=len(ids))
 
 businesses = db.displayLeaderboard(number_names)
 

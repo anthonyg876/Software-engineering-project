@@ -47,7 +47,7 @@ def participant_form():
     participant_values["first_name"] = st.text_input("First Name", placeholder="Name here")
     participant_values["last_name"]  = st.text_input("Last Name", placeholder="Name here")
     participant_values["email"]  = st.text_input("Email", placeholder="Type email here")
-    participant_values["password"]  = st.text_input("Password", placeholder="Type a good password here", type="password")
+    participant_values["password"]  = st.text_input("Password (Between 13 and 25 characters with 1 capital letter, 1 lowercase letter, 1 number, 1 special character)", placeholder="Type a good password here", type="password")
 
     return participant_values
 
