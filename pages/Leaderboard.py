@@ -6,6 +6,7 @@ if "user" not in st.experimental_get_query_params():
 
 if "balloons" not in st.session_state:
     st.session_state["balloons"] = 0
+    st.balloons()
 
 st.title("Leaderboard")
 
@@ -14,10 +15,6 @@ names = db.distinct_business_names()
 number_names = st.slider("Number of Businesses", min_value=1, max_value=len(names))
 
 businesses = db.displayLeaderboard(number_names)
-
-if st.session_state["balloons"] == 0:
-    st.session_state["balloons"] = 1
-    st.balloons()
 
 for i, business in enumerate(businesses):
 
