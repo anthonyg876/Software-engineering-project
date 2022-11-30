@@ -639,6 +639,17 @@ def find_item(name: str, bid: int) -> str:
 
     return "Successful"
 
+def displayLeaderboard(topRows: int):
+    try: 
+        connection = oracledb.connect(dsn=dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+    cur = connection.cursor()
+    cur.execute("select business.name, sum((originalprice - postprice)*quantity) as Donation from business inner join items on business.id = items.bid group by business.name order by Donation desc fetch first :topRows rows only", [topRows])
+    itemInfo = cur.fetchall()
+    return itemInfo
+
 
 def distinct_counties():
 
@@ -800,7 +811,6 @@ def filter_items(categories, counties, business_names,
     connection.close()
 
     return items
-    
 
 if __name__ == "__main__":
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
