@@ -186,7 +186,7 @@ def get_update_info():
 
     updated_item_info = {}
 
-    updated_item_info["Item Name"] = st.text_input("Enter in the name of the item you want to change")
+    updated_item_info["Item Name"] = st.text_input("Enter in the name of the item you want to change. (Case Sensitive)")
 
     item_update_options = st.multiselect("Choose what you'd like to change", 
                         options=["Category", "Post Price", "Original Price", "Quantity"])
@@ -306,7 +306,7 @@ else:
 
         else:
 
-            item_name = st.text_input("Enter item name that you want deleted.")
+            item_name = st.text_input("Enter item name that you want deleted. (Case Sensitive)")
 
             if st.button("Delete Item"):
                 delete_item(item_name)
