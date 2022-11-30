@@ -136,12 +136,19 @@ h1 {
     width: 17rem;
 }
 
-.itemHead, .titleHead, .itemInfo{
+.itemInfo{
+    font-weight: bold;
+    font-size: 30px;
     text-align: center;
+    font-family: 'Dosis', sans-serif;
+
 }
 
 .itemHead, .titleHead{
-    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 50px;
+    font-family: 'Dosis', sans-serif;
 }
 
 .css-10trblm{
