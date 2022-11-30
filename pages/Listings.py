@@ -124,8 +124,8 @@ def filter_interface():
         business_name = db.returnBusinessInfo(business_email)[1]
         business_county = db.returnBusinessInfo(business_email)[4]
 
-        filter_dict["Business Name"] = business_name
-        filter_dict["County"] = business_county
+        filter_dict["Business Name"] = [business_name]
+        filter_dict["County"] = [business_county]
 
     filterOptions = st.multiselect("Select how you want to filter",
                             options=options)
