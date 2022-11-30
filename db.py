@@ -56,7 +56,7 @@ def addBusiness(email: str, id: int, name: str, password: str, address: str, cou
     cur = connection.cursor()
     # Insert into database a business model.
     try:
-        cur.execute("insert into Business values(:id, :name, :password, :address, :county, :phone_number)", [id, name, password, address, county, phoneNumber])
+        cur.execute("insert into Business values(:id, :name, :password, :address, :county, :phone_number)", [id, name, password.hexdigest(), address, county, phoneNumber])
         connection.commit()
         output = "Added business to database"
     except:
@@ -305,7 +305,7 @@ def return_all_items():
 
     cur = connection.cursor()
 
-    cur.execute("SELECT * FROM Items ORDER BY name")
+    cur.execute("SELECT * FROM Items ORDER BY postPrice ASC")
 
     all_items = cur.fetchall()
     connection.close()
@@ -628,7 +628,7 @@ def find_item(name: str, bid: int) -> str:
 
     cur = connection.cursor()
 
-    cur.execute("select * from items where name = :name and bid = :bid", [name ,bid ])
+    cur.execute("select * from items where name = :name and bid = :bid", [name, bid])
 
     items = cur.fetchall() 
 
@@ -649,6 +649,168 @@ def displayLeaderboard(topRows: int):
     cur.execute("select business.name, sum((originalprice - postprice)*quantity) as Donation from business inner join items on business.id = items.bid group by business.name order by Donation desc fetch first :topRows rows only", [topRows])
     itemInfo = cur.fetchall()
     return itemInfo
+
+
+def distinct_counties():
+
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+
+    cur = connection.cursor()
+
+    cur.execute("select DISTINCT(county) from Business")
+
+    counties = cur.fetchall()
+
+    return counties
+
+def distinct_business_names():
+
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+
+    cur = connection.cursor()
+
+    cur.execute("select DISTINCT(name) from Business")
+
+    names = cur.fetchall()
+
+    return names
+
+def max_price():
+
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+
+    cur = connection.cursor()
+
+    cur.execute("select MAX(postPrice) from Items")
+
+    max_price = cur.fetchall()
+
+    return max_price[0][0]
+
+
+def filter_items(categories, counties, business_names, 
+                min_price, max_price, search_item_name, sort_type, sort_order):
+
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+
+    cur = connection.cursor()
+
+    if len(categories) == 0:
+        categories = ["Food", "Clothing", "Medicine", "Toiletries", "Misc"]
+
+    if len(counties) == 0:
+        counties = [county[0] for county in distinct_counties()]
+
+    if len(business_names) == 0:
+        business_names = [business[0] for business in distinct_business_names()]
+
+    bind_value_length = 0
+
+    placeholders_category = [":" + str(i + 1) for i in range(len(categories))]
+    bind_value_length += len(categories)
+
+    placeholders_county = [":" + str(i + 1) for i in range(bind_value_length, bind_value_length + len(counties))]
+    bind_value_length += len(counties)
+
+    placeholders_business_names = [":" + str(i + 1) for i in range(bind_value_length, bind_value_length + len(business_names))]
+    bind_value_length += len(business_names)
+
+    placeholders_min_price = [":" + str(i + 1) for i in range(bind_value_length, bind_value_length+1)]
+    bind_value_length += 1
+
+    placeholders_max_price = [":" + str(i + 1) for i in range(bind_value_length, bind_value_length+1)]
+    bind_value_length += 1
+
+    placeholders_item_name = [":" + str(i + 1) for i in range(bind_value_length, bind_value_length+1)]
+    bind_value_length += 1
+
+
+    if sort_type == "Price" and sort_order == "ASC":
+
+        query = "select i.* FROM items i join business b on i.bId = b.id " + \
+            "where i.category in (%s) " % (",".join(placeholders_category)) + \
+            "AND b.county in (%s) " % (",".join(placeholders_county)) + \
+            "AND b.name in (%s) " % (",".join(placeholders_business_names)) + \
+            "AND i.postPrice >= (%s) " % (",".join(placeholders_min_price)) + \
+            "AND i.postPrice <= (%s) " % (",".join(placeholders_max_price)) + \
+            "AND LOWER(i.name) LIKE (%s) " % (",".join(placeholders_item_name)) + \
+            "ORDER BY i.postPrice ASC"
+
+    elif sort_type == "Price" and sort_order == "DESC":
+
+        query = "select i.* FROM items i join business b on i.bId = b.id " + \
+            "where i.category in (%s) " % (",".join(placeholders_category)) + \
+            "AND b.county in (%s) " % (",".join(placeholders_county)) + \
+            "AND b.name in (%s) " % (",".join(placeholders_business_names)) + \
+            "AND i.postPrice >= (%s) " % (",".join(placeholders_min_price)) + \
+            "AND i.postPrice <= (%s) " % (",".join(placeholders_max_price)) + \
+            "AND LOWER(i.name) LIKE (%s) " % (",".join(placeholders_item_name)) + \
+            "ORDER BY i.postPrice DESC"
+
+    elif sort_type == "Alphabetical" and sort_order == "ASC":
+
+        query = "select i.* FROM items i join business b on i.bId = b.id " + \
+            "where i.category in (%s) " % (",".join(placeholders_category)) + \
+            "AND b.county in (%s) " % (",".join(placeholders_county)) + \
+            "AND b.name in (%s) " % (",".join(placeholders_business_names)) + \
+            "AND i.postPrice >= (%s) " % (",".join(placeholders_min_price)) + \
+            "AND i.postPrice <= (%s) " % (",".join(placeholders_max_price)) + \
+            "AND LOWER(i.name) LIKE (%s) " % (",".join(placeholders_item_name)) + \
+            "ORDER BY LOWER(i.name) ASC"
+
+    else:
+        query = "select i.* FROM items i join business b on i.bId = b.id " + \
+            "where i.category in (%s) " % (",".join(placeholders_category)) + \
+            "AND b.county in (%s) " % (",".join(placeholders_county)) + \
+            "AND b.name in (%s) " % (",".join(placeholders_business_names)) + \
+            "AND i.postPrice >= (%s) " % (",".join(placeholders_min_price)) + \
+            "AND i.postPrice <= (%s) " % (",".join(placeholders_max_price)) + \
+            "AND LOWER(i.name) LIKE (%s) " % (",".join(placeholders_item_name)) + \
+            "ORDER BY LOWER(i.name) DESC"
+
+
+    bind_values = []
+
+    for cat in categories:
+        bind_values.append(cat)
+
+    for county in counties:
+        bind_values.append(county)
+
+    for b_name in business_names:
+        bind_values.append(b_name)
+
+    bind_values.append(min_price)
+    bind_values.append(max_price)
+
+    bind_values.append(f"%{search_item_name}%")
+
+    cur.execute(query, bind_values)
+
+    items = cur.fetchall()
+
+    connection.close()
+
+    return items
 
 if __name__ == "__main__":
     #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
@@ -705,9 +867,11 @@ if __name__ == "__main__":
     # print(returnBusinessInfo("ag@gamil.com"))
     # print("Participants")
     # addParticipants("ag1941@gmail.com", "Anthony", "Bologni", 25, "cbd123")
-    verifyLogin("ag1941@gmail.com", "cbd123")
-    print(displayLeaderboard(2))
 
-    # for row in return_all_participants():
-        # print(row)
+    # categories = ["Food", "Clothing", "Medicine"]
+    # counties = []
 
+    # for row in return_all_items("DESC", "DESC"):
+    #     print(row)
+    for row in filter_items(["Food", "Misc"], [], [], 0, 100, "", "Price", 'DESC'):
+        print(row)
