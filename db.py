@@ -685,6 +685,23 @@ def distinct_business_names():
 
     return names
 
+def distinct_business_ids():
+
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to database")
+
+    cur = connection.cursor()
+
+    cur.execute("SELECT DISTINCT(bId) from items")
+
+    ids = cur.fetchall()
+
+    return ids
+
 def max_price():
 
     # Attempt connection to Oracle database.

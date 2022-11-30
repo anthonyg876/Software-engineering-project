@@ -66,7 +66,6 @@ def update_item(updated_item_info):
 
     if len(updated_item_info.keys()) == 1:
         st.write("No update criteria selected")
-        st.write(updated_item_info.items())
         return
 
     for k, v in updated_item_info.items():
@@ -124,8 +123,8 @@ def filter_interface():
         business_name = db.returnBusinessInfo(business_email)[1]
         business_county = db.returnBusinessInfo(business_email)[4]
 
-        filter_dict["Business Name"] = business_name
-        filter_dict["County"] = business_county
+        filter_dict["Business Name"] = [business_name]
+        filter_dict["County"] = [business_county]
 
     filterOptions = st.multiselect("Select how you want to filter",
                             options=options)
@@ -187,7 +186,7 @@ def get_update_info():
 
     updated_item_info = {}
 
-    updated_item_info["Item Name"] = st.text_input("Enter in the name of the item you want to change")
+    updated_item_info["Item Name"] = st.text_input("Enter in the name of the item you want to change. (Case Sensitive)")
 
     item_update_options = st.multiselect("Choose what you'd like to change", 
                         options=["Category", "Post Price", "Original Price", "Quantity"])
@@ -307,7 +306,7 @@ else:
 
         else:
 
-            item_name = st.text_input("Enter item name that you want deleted.")
+            item_name = st.text_input("Enter item name that you want deleted. (Case Sensitive)")
 
             if st.button("Delete Item"):
                 delete_item(item_name)
