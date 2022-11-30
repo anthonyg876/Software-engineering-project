@@ -646,7 +646,7 @@ def displayLeaderboard(topRows: int):
     except:
         print("Was not able to connect to database")
     cur = connection.cursor()
-    cur.execute("select business.name, sum(originalprice - postprice) as Donation from business inner join items on business.id = items.bid group by business.name order by Donation desc fetch first :topRows rows only", [topRows])
+    cur.execute("select business.name, sum((originalprice - postprice)*quantity) as Donation from business inner join items on business.id = items.bid group by business.name order by Donation desc fetch first :topRows rows only", [topRows])
     itemInfo = cur.fetchall()
     return itemInfo
 
