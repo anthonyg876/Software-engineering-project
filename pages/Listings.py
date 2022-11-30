@@ -66,7 +66,6 @@ def update_item(updated_item_info):
 
     if len(updated_item_info.keys()) == 1:
         st.write("No update criteria selected")
-        st.write(updated_item_info.items())
         return
 
     for k, v in updated_item_info.items():
