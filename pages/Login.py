@@ -137,6 +137,14 @@ with account_tab:
                         st.write("Income must be $30,000 or less.")
                         successful_account = False
 
+                    if not db.checkBusinessId(seller_values["business_id"]):
+                        st.write("Business id must be unique and between 1 and 100.")
+                        successful_account = False
+
+                    if not db.verifyEmail(participant_values["email"]):
+                        st.write("Need a unique email.")
+                        successful_account = False
+
                     if not vp.validPasswordCheck(participant_values["password"]):
                         st.write("Password requirements not met.")
                         successful_account = False
@@ -192,6 +200,14 @@ with account_tab:
                             st.write("Need a numerical value for business id") 
                             successful_account = False
 
+                        if not db.checkBusinessId(seller_values["business_id"]):
+                            st.write("Business id must be unique and between 1 and 100.")
+                            successful_account = False
+
+                        if not db.verifyEmail(participant_values["email"]):
+                            st.write("Need a unique email.")
+                            successful_account = False
+
                         if not vp.validPasswordCheck(participant_values["password"]):
                             st.write("Password requirements not met.")
                             successful_account = False
@@ -233,6 +249,10 @@ with account_tab:
 
                         if participant_values["income"] > 30000:
                             st.write("Income must be $30,000 or less.")
+                            successful_account = False
+
+                        if not db.verifyEmail(participant_values["email"]):
+                            st.write("Need a unique email.")
                             successful_account = False
 
                         if not vp.validPasswordCheck(participant_values["password"]):
