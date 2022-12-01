@@ -9,21 +9,72 @@ port = 1521
 service_name = "orcl"
 
 dsn = f'{username}/{userpwd}@{host}:{port}/{service_name}'    
-salt = "5gz"
+salt = "HAPM4"
 
-def hashPassword(password: str) -> str:
-    password = password + salt
-    hashed = hashlib.md5(password.encode())
+# Helper functions for project
+def hashCode(code: str) -> str:
+    code = code + salt
+    hashed = hashlib.md5(code.encode())
     # print("Hashed Password is: " + hashed)
     return hashed
 
+'''
+    Verifies emails of users for testing, returns a boolean. True if participant with given email exists.
+'''
+def verifyEmail(email: str) -> bool:
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to the database.")
+        return False
+    
+    email = hashCode(email)
+    cur = connection.cursor()
+    
+    try:
+        cur.execute("select * from participants where email = :email", [email.hexdigest()])
+        count = cur.fetchall()
+        if (len(count) == 0):
+            print("Unique email.")
+            return True
+        return False
+    except:
+        print("Could not execute query to find a user with given email.")
+        return False
+    
+def checkBusinessId(id: int) ->bool:
 
+    if id < 0 or id > 100:
+        return False
+
+    # Attempt connection to Oracle database.
+    try:
+        connection = oracledb.connect(dsn = dsn)
+        print("Connected to database")
+    except:
+        print("Was not able to connect to the database.")
+        return False
+    cur = connection.cursor()
+    
+    try:
+        cur.execute("select * from Business where id = :id", [id])
+        count = cur.fetchall()
+        if (len(count) == 0):
+            print("Unique Id.")
+            return True
+        return False
+    except:
+        print("Could not execute query to check Business id")
+        return False
 '''
 Adds user to the database.
 '''
 def addParticipants(email: str, firstName: str, lastName: str, income: int, password: str) -> str:
 
-    hashed = hashPassword(password)
+    hashedEmail = hashCode(email)
+    hashedPassword = hashCode(password)
 
     # Attempt connection to Oracle database.
     try:
@@ -34,7 +85,7 @@ def addParticipants(email: str, firstName: str, lastName: str, income: int, pass
         print("Was not able to connect to the database.")
     cur = connection.cursor()
     try:
-        cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [email, firstName, lastName, income, hashed.hexdigest()])
+        cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [hashedEmail.hexdigest(), firstName, lastName, income, hashedPassword.hexdigest()])
         connection.commit()
         output = "Added user into database"
     except:
@@ -45,8 +96,8 @@ def addParticipants(email: str, firstName: str, lastName: str, income: int, pass
 Adds business to db
 '''
 def addBusiness(email: str, id: int, name: str, password: str, address: str, county: str, phoneNumber: int) -> str:
-
-    password = hashPassword(password)
+    email = hashCode(email)
+    password = hashCode(password)
     # Attempt connection to Oracle database.
     try:
         connection = oracledb.connect(dsn = dsn)
@@ -63,7 +114,7 @@ def addBusiness(email: str, id: int, name: str, password: str, address: str, cou
         output = "Unsuccessful"
         print("Unsuccesful business insertion")
     try:
-        cur.execute("insert into ownsbusiness values(:email, :bid)", [email, id])
+        cur.execute("insert into ownsbusiness values(:email, :bid)", [email.hexdigest(), id])
         connection.commit()
         output = "inserted ownsbusiness relationship Email"
     except:
@@ -164,8 +215,8 @@ def addItem(name: str, category: str, postPrice: float, originalPrice: float, qu
 Verifies user credentials and returns user info.
 '''
 def verifyLogin(email: str, password: str):
-
-    password = hashPassword(password)
+    email = hashCode(email)
+    password = hashCode(password)
 
     # Attempt connection to Oracle db.
     try: 
@@ -176,13 +227,13 @@ def verifyLogin(email: str, password: str):
         print(oracledb.connect(dsn=dsn))
     cur = connection.cursor()
     # Check if the user even exists
-    cur.execute("select * from participants where email = :email", [email])
+    cur.execute("select * from participants where email = :email", [email.hexdigest()])
     number = cur.fetchall() 
     if (len(number) != 1):
         print("User with email does not exist")
         return None
     
-    cur.execute("select * from participants where email = :email and password = :password", [email, password.hexdigest()])
+    cur.execute("select * from participants where email = :email and password = :password", [email.hexdigest(), password.hexdigest()])
     user = cur.fetchall()
     if (len(user) != 1):
         print("Password does not match, try again")
