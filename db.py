@@ -36,15 +36,19 @@ def verifyEmail(email: str) -> bool:
     try:
         cur.execute("select * from participants where email = :email", [email.hexdigest()])
         count = cur.fetchall()
-        if (count != 1):
-            print("User with given email does not exist, please try again.")
-            return False
-        return True
+        if (len(count) == 0):
+            print("Unique email.")
+            return True
+        return False
     except:
         print("Could not execute query to find a user with given email.")
         return False
     
 def checkBusinessId(id: int) ->bool:
+
+    if id < 0 or id > 100:
+        return False
+
     # Attempt connection to Oracle database.
     try:
         connection = oracledb.connect(dsn = dsn)
@@ -57,9 +61,10 @@ def checkBusinessId(id: int) ->bool:
     try:
         cur.execute("select * from Business where id = :id", [id])
         count = cur.fetchall()
-        if (count != 1):
-            print("Business with given id could not be found in the system. Please try again.")
-        return True
+        if (len(count) == 0):
+            print("Unique Id.")
+            return True
+        return False
     except:
         print("Could not execute query to check Business id")
         return False
