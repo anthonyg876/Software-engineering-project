@@ -1,5 +1,6 @@
 import streamlit as st
 import db
+import validPasswordChecker as vp
 
 if "user" not in st.experimental_get_query_params():
     st.experimental_set_query_params(user="no")
@@ -136,32 +137,35 @@ with account_tab:
                         st.write("Income must be $30,000 or less.")
                         successful_account = False
 
-                    else:
+                    if not vp.validPasswordCheck(participant_values["password"]):
+                        st.write("Password requirements not met.")
+                        successful_account = False
 
-                        if successful_account:
 
-                            if db.addParticipants(
-                                    participant_values["email"],
-                                    participant_values["first_name"],
-                                    participant_values["last_name"],
-                                    participant_values["income"],
-                                    participant_values["password"]
-                                ) != "Added user into database":
-                                    st.write("User was not added")
+                    if successful_account:
 
-                            elif db.addBusiness(
-                                participant_values["email"], 
-                                seller_values["business_id"], 
-                                seller_values["business_name"], 
-                                participant_values["password"], 
-                                seller_values["address"], 
-                                seller_values["county"], 
-                                seller_values["phone_number"]
+                        if db.addParticipants(
+                            participant_values["email"],
+                            participant_values["first_name"],
+                            participant_values["last_name"],
+                            participant_values["income"],
+                            participant_values["password"]
+                            ) != "Added user into database":
+                                st.write("User was not added")
+
+                        elif db.addBusiness(
+                            participant_values["email"], 
+                            seller_values["business_id"], 
+                            seller_values["business_name"], 
+                            participant_values["password"], 
+                            seller_values["address"], 
+                            seller_values["county"], 
+                            seller_values["phone_number"]
                             ) == "Unsuccessful":
                                 st.write("User was not added")
                                     
-                            else:
-                                st.write("User account was added")
+                        else:
+                            st.write("User account was added")
                                 
 
             else:
@@ -186,6 +190,10 @@ with account_tab:
                             seller_values["business_id"] = int(seller_values["business_id"]) 
                         except:
                             st.write("Need a numerical value for business id") 
+                            successful_account = False
+
+                        if not vp.validPasswordCheck(participant_values["password"]):
+                            st.write("Password requirements not met.")
                             successful_account = False
 
                         if successful_account:
@@ -227,7 +235,12 @@ with account_tab:
                             st.write("Income must be $30,000 or less.")
                             successful_account = False
 
-                        else:
+                        if not vp.validPasswordCheck(participant_values["password"]):
+                            st.write("Password requirements not met.")
+                            successful_account = False
+
+                        if successful_account:
+
                             if db.addParticipants(
                                 participant_values["email"],
                                 participant_values["first_name"],
@@ -239,27 +252,7 @@ with account_tab:
 
                             else:
                                 st.write("User account was added")
-
-
-            print("Participants")
-            print()
-
-            for row in db.return_all_participants():
-                print(row)
-
-            print("Businesses")
-            print()
-
-            for row in db.return_all_businesses():
-                print(row)
-
-            print()
-            print()
-            print()
-            print("Owned")
-            
-            for row in db.return_all_owned():
-                print(row)         
+      
 
 with login_tab:
 
