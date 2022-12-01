@@ -5,6 +5,66 @@ import validPasswordChecker as vp
 if "user" not in st.experimental_get_query_params():
     st.experimental_set_query_params(user="no")
 
+
+def check_form_for_blanks(form_list):
+
+    for form in form_list:
+        for text_value in form:
+            if text_value == "":
+                return True
+    return False
+
+def check_form_requirements(participant_values, seller_values, user_type):
+
+    successful_account = True
+
+    form_values = None
+
+    if user_type == "both" or user_type == "seller":
+        form_values = [seller_values.values(), participant_values.values()]
+
+    else:
+        form_values = [participant_values.values()]
+
+    if check_form_for_blanks(form_values):
+        st.write("Fill out every input box")
+        return False
+
+    if user_type == "both" or user_type == "buyer":
+
+        if participant_values["income"] > 30000:
+            st.write("Income must be $30,000 or less.")
+            successful_account = False
+
+    if user_type == "both" or user_type == "seller":
+
+        try:
+            seller_values["phone_number"] = int(seller_values["phone_number"])
+        except:
+            st.write("Phone number needs to be just numerical digits (no hyphens or other characters)")
+            successful_account = False
+
+        try:
+            seller_values["business_id"] = int(seller_values["business_id"]) 
+        except:
+            st.write("Need a numerical value for business id")
+            return False
+
+        if not db.checkBusinessId(seller_values["business_id"]):
+            st.write("Business id must be unique and between 1 and 100.")
+            successful_account = False
+
+    if not db.verifyEmail(participant_values["email"]):
+        st.write("Need a unique email.")
+        successful_account = False
+
+    if not vp.validPasswordCheck(participant_values["password"]):
+        st.write("Password requirements not met.")
+        successful_account = False
+
+    return successful_account
+
+
 def login(email, login):
 
     user = db.verifyLogin(email, password)
@@ -16,7 +76,7 @@ def login(email, login):
 
         user_email = user[0][0]
 
-        user_type = db.returnUserType(email)
+        user_type = db.returnUserType(user_email)
 
         if user_type == "Both":
             st.experimental_set_query_params(user="both", email=user_email)
@@ -51,16 +111,6 @@ def participant_form():
     participant_values["password"]  = st.text_input("Password (Between 13 and 25 characters with 1 capital letter, 1 lowercase letter, 1 number, 1 special character)", placeholder="Type a good password here", type="password")
 
     return participant_values
-
-
-def check_form_for_blanks(form_list):
-
-    for form in form_list:
-        for text_value in form:
-            if text_value == "":
-                return True
-
-    return False
 
 
 account_tab, login_tab = st.tabs(["Create Account", "Login"])
@@ -109,149 +159,76 @@ with account_tab:
 
         if st.button("Create Account"):
 
-            successful_account = True
-
             if combined_account:
 
-                blank = check_form_for_blanks([seller_values.values(), participant_values.values()])
-                
-                if blank:
-                    st.write("Fill out every input box")
-                    successful_account = False
+                if check_form_requirements(participant_values, seller_values, "both"):
 
-                else:
+                    if db.addParticipants(
+                        participant_values["email"],
+                        participant_values["first_name"],
+                        participant_values["last_name"],
+                        participant_values["income"],
+                        participant_values["password"]
+                        ) != "Added user into database":
+                            st.write("User was not added")
 
-                    try:
-                        seller_values["phone_number"] = int(seller_values["phone_number"])
-                    except:
-                        st.write("Phone number needs to be just numerical digits (no hyphens or other characters)")
-                        successful_account = False
-
-                    try:
-                        seller_values["business_id"] = int(seller_values["business_id"]) 
-                    except:
-                        st.write("Need a numerical value for business id")
-                        successful_account = False
-
-                    if participant_values["income"] > 30000:
-                        st.write("Income must be $30,000 or less.")
-                        successful_account = False
-
-                    if not vp.validPasswordCheck(participant_values["password"]):
-                        st.write("Password requirements not met.")
-                        successful_account = False
-
-
-                    if successful_account:
-
-                        if db.addParticipants(
-                            participant_values["email"],
-                            participant_values["first_name"],
-                            participant_values["last_name"],
-                            participant_values["income"],
-                            participant_values["password"]
-                            ) != "Added user into database":
-                                st.write("User was not added")
-
-                        elif db.addBusiness(
-                            participant_values["email"], 
-                            seller_values["business_id"], 
-                            seller_values["business_name"], 
-                            participant_values["password"], 
-                            seller_values["address"], 
-                            seller_values["county"], 
-                            seller_values["phone_number"]
-                            ) == "Unsuccessful":
-                                st.write("User was not added")
+                    elif db.addBusiness(
+                        participant_values["email"], 
+                        seller_values["business_id"], 
+                        seller_values["business_name"], 
+                        participant_values["password"], 
+                        seller_values["address"], 
+                        seller_values["county"], 
+                        seller_values["phone_number"]
+                        ) == "Unsuccessful":
+                            st.write("User was not added")
                                     
-                        else:
-                            st.write("User account was added")
+                    else:
+                        st.write("User account was added")
                                 
+
+            elif user == "Seller":
+
+                if check_form_requirements(participant_values, seller_values, "seller"):
+
+                    if db.addParticipants(
+                        participant_values["email"],
+                        participant_values["first_name"],
+                        participant_values["last_name"],
+                        participant_values["income"],
+                        participant_values["password"]
+                    ) != "Added user into database":
+                        st.write("User was not added")
+
+                    elif db.addBusiness(
+                        participant_values["email"], 
+                        seller_values["business_id"], 
+                        seller_values["business_name"], 
+                        participant_values["password"], 
+                        seller_values["address"], 
+                        seller_values["county"], 
+                        seller_values["phone_number"]
+                    ) == "Unsuccessful":
+                        st.write("User was not added")
+                                
+                    else:
+                        st.write("User account was added")
 
             else:
 
-                if user == "Seller":
+                if check_form_requirements(participant_values, None, "buyer"):
 
-                    blank = check_form_for_blanks([seller_values.values()])
-                
-                    if blank:
-                        st.write("Fill out every input box")
-                        successful_account = False
+                    if db.addParticipants(
+                        participant_values["email"],
+                        participant_values["first_name"],
+                        participant_values["last_name"],
+                        participant_values["income"],
+                        participant_values["password"]
+                    ) != "Added user into database":
+                        st.write("User was not added")
 
                     else:
-
-                        try:
-                            seller_values["phone_number"] = int(seller_values["phone_number"])
-                        except:
-                            st.write("Phone number needs to be just numerical digits (no hyphens or other characters)")
-                            successful_account = False
-
-                        try:
-                            seller_values["business_id"] = int(seller_values["business_id"]) 
-                        except:
-                            st.write("Need a numerical value for business id") 
-                            successful_account = False
-
-                        if not vp.validPasswordCheck(participant_values["password"]):
-                            st.write("Password requirements not met.")
-                            successful_account = False
-
-                        if successful_account:
-
-                            if db.addParticipants(
-                                participant_values["email"],
-                                participant_values["first_name"],
-                                participant_values["last_name"],
-                                participant_values["income"],
-                                participant_values["password"]
-                            ) != "Added user into database":
-                                st.write("User was not added")
-
-                            elif db.addBusiness(
-                                participant_values["email"], 
-                                seller_values["business_id"], 
-                                seller_values["business_name"], 
-                                participant_values["password"], 
-                                seller_values["address"], 
-                                seller_values["county"], 
-                                seller_values["phone_number"]
-                            ) == "Unsuccessful":
-                                st.write("User was not added")
-                                
-                            else:
-                                st.write("User account was added")
-
-                else:
-
-                    blank = check_form_for_blanks([participant_values.values()])
-                
-                    if blank:
-                        st.write("Fill out every input box")
-                        successful_account = False
-                    
-                    else:
-
-                        if participant_values["income"] > 30000:
-                            st.write("Income must be $30,000 or less.")
-                            successful_account = False
-
-                        if not vp.validPasswordCheck(participant_values["password"]):
-                            st.write("Password requirements not met.")
-                            successful_account = False
-
-                        if successful_account:
-
-                            if db.addParticipants(
-                                participant_values["email"],
-                                participant_values["first_name"],
-                                participant_values["last_name"],
-                                participant_values["income"],
-                                participant_values["password"]
-                            ) != "Added user into database":
-                                st.write("User was not added")
-
-                            else:
-                                st.write("User account was added")
+                        st.write("User account was added")
       
 
 with login_tab:

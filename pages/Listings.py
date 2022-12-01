@@ -37,8 +37,11 @@ def add_item():
         if item_name == "":
             st.write("Item name is blank")
 
+        elif db.find_item(item_name, bID) == "Successful":
+            st.write("Item already exists.")
+        
         else:
-
+            
             item_added = db.addItem(item_name, category, post_price, original_price, quantity, bID)
 
             if item_added == "Inserted item into database.":

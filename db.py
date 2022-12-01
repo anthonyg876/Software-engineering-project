@@ -30,11 +30,11 @@ def verifyEmail(email: str) -> bool:
         print("Was not able to connect to the database.")
         return False
     
-    email = hashCode(email)
+    email = hashCode(email).hexdigest()
     cur = connection.cursor()
     
     try:
-        cur.execute("select * from participants where email = :email", [email.hexdigest()])
+        cur.execute("select * from participants where email = :email", [email])
         count = cur.fetchall()
         if (len(count) == 0):
             print("Unique email.")
@@ -73,8 +73,8 @@ Adds user to the database.
 '''
 def addParticipants(email: str, firstName: str, lastName: str, income: int, password: str) -> str:
 
-    hashedEmail = hashCode(email)
-    hashedPassword = hashCode(password)
+    hashedEmail = hashCode(email).hexdigest()
+    hashedPassword = hashCode(password).hexdigest()
 
     # Attempt connection to Oracle database.
     try:
@@ -85,7 +85,7 @@ def addParticipants(email: str, firstName: str, lastName: str, income: int, pass
         print("Was not able to connect to the database.")
     cur = connection.cursor()
     try:
-        cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [hashedEmail.hexdigest(), firstName, lastName, income, hashedPassword.hexdigest()])
+        cur.execute("insert into participants values (:email, :firstName, :lastName, :income, :password)", [hashedEmail, firstName, lastName, income, hashedPassword])
         connection.commit()
         output = "Added user into database"
     except:
@@ -96,8 +96,10 @@ def addParticipants(email: str, firstName: str, lastName: str, income: int, pass
 Adds business to db
 '''
 def addBusiness(email: str, id: int, name: str, password: str, address: str, county: str, phoneNumber: int) -> str:
-    email = hashCode(email)
-    password = hashCode(password)
+
+    email = hashCode(email).hexdigest()
+    password = hashCode(password).hexdigest()
+
     # Attempt connection to Oracle database.
     try:
         connection = oracledb.connect(dsn = dsn)
@@ -107,14 +109,14 @@ def addBusiness(email: str, id: int, name: str, password: str, address: str, cou
     cur = connection.cursor()
     # Insert into database a business model.
     try:
-        cur.execute("insert into Business values(:id, :name, :password, :address, :county, :phone_number)", [id, name, password.hexdigest(), address, county, phoneNumber])
+        cur.execute("insert into Business values(:id, :name, :password, :address, :county, :phone_number)", [id, name, password, address, county, phoneNumber])
         connection.commit()
         output = "Added business to database"
     except:
         output = "Unsuccessful"
         print("Unsuccesful business insertion")
     try:
-        cur.execute("insert into ownsbusiness values(:email, :bid)", [email.hexdigest(), id])
+        cur.execute("insert into ownsbusiness values(:email, :bid)", [email, id])
         connection.commit()
         output = "inserted ownsbusiness relationship Email"
     except:
@@ -126,6 +128,7 @@ def addBusiness(email: str, id: int, name: str, password: str, address: str, cou
 
     
 def deleteParticipant(email: str) -> None:
+
     try:
         connection = oracledb.connect(dsn = dsn)
         print("Connected to database")
@@ -148,6 +151,7 @@ def deleteParticipant(email: str) -> None:
     return output
 
 def deleteOwnsBusiness(email: str) -> None:
+
     try:
         connection = oracledb.connect(dsn = dsn)
         print("Connected to database")
@@ -181,7 +185,7 @@ def deleteBusiness(id: int) -> str:
         connection.commit()
         output = "Deleted ownsbusiness from database."
     except:
-        output = "Unable to deleted ownsbusiness from database"
+        output = "Unable to delete ownsbusiness from database"
     try:
         cur.execute("delete from business where id = :id", [id])
         connection.commit()
@@ -215,8 +219,9 @@ def addItem(name: str, category: str, postPrice: float, originalPrice: float, qu
 Verifies user credentials and returns user info.
 '''
 def verifyLogin(email: str, password: str):
-    email = hashCode(email)
-    password = hashCode(password)
+
+    email = hashCode(email).hexdigest()
+    password = hashCode(password).hexdigest()
 
     # Attempt connection to Oracle db.
     try: 
@@ -227,13 +232,13 @@ def verifyLogin(email: str, password: str):
         print(oracledb.connect(dsn=dsn))
     cur = connection.cursor()
     # Check if the user even exists
-    cur.execute("select * from participants where email = :email", [email.hexdigest()])
+    cur.execute("select * from participants where email = :email", [email])
     number = cur.fetchall() 
     if (len(number) != 1):
         print("User with email does not exist")
         return None
     
-    cur.execute("select * from participants where email = :email and password = :password", [email.hexdigest(), password.hexdigest()])
+    cur.execute("select * from participants where email = :email and password = :password", [email, password])
     user = cur.fetchall()
     if (len(user) != 1):
         print("Password does not match, try again")
@@ -242,6 +247,7 @@ def verifyLogin(email: str, password: str):
     return user
 
 def returnUserType(email: str):
+
     # Attempt connection to Oracle db.
     try: 
         connection = oracledb.connect(dsn=dsn)
@@ -257,7 +263,7 @@ def returnUserType(email: str):
     if (income[0][0] == -1):
         #print("User with email does not exist")
         return "Seller"
-    # Check if the user even exists
+    # Check if the user is associated with a business
     cur.execute("select * from ownsbusiness where email = :email", [email])
     number = cur.fetchall()
     if (len(number) != 1):
@@ -266,6 +272,7 @@ def returnUserType(email: str):
     return "Both"
 
 def returnBusinessInfo(email: str):
+
     # Attempt connection to Oracle db.
     try: 
         connection = oracledb.connect(dsn=dsn)
@@ -304,6 +311,7 @@ def returnBusinessInfoById(bid: int):
     return businessInfo[0]
 
 def returnBusinessID(email: str):
+
     # Attempt connection to Oracle db.
     try: 
         connection = oracledb.connect(dsn=dsn)
