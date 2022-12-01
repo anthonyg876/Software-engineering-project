@@ -9,7 +9,7 @@ port = 1521
 service_name = "orcl"
 
 dsn = f'{username}/{userpwd}@{host}:{port}/{service_name}'    
-salt = "5gz"
+salt = "HAPM4"
 
 # Helper functions for project
 def hashCode(code: str) -> str:
