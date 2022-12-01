@@ -263,6 +263,8 @@ with login_tab:
         email = st.text_input("Email")
         password = st.text_input("Password", type="password")
 
+        email = db.hashCode(email).hexdigest()
+
         if st.button("Login"):
             login(email, password)
 
