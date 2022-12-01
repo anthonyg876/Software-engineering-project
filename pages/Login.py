@@ -16,7 +16,7 @@ def login(email, login):
 
         user_email = user[0][0]
 
-        user_type = db.returnUserType(email)
+        user_type = db.returnUserType(user_email)
 
         if user_type == "Both":
             st.experimental_set_query_params(user="both", email=user_email)
@@ -282,8 +282,6 @@ with login_tab:
 
         email = st.text_input("Email")
         password = st.text_input("Password", type="password")
-
-        email = db.hashCode(email).hexdigest()
 
         if st.button("Login"):
             login(email, password)
