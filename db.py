@@ -173,6 +173,7 @@ def verifyLogin(email: str, password: str):
         print("Connected to database")
     except:
         print("Was not able to connect to database")
+        print(oracledb.connect(dsn=dsn))
     cur = connection.cursor()
     # Check if the user even exists
     cur.execute("select * from participants where email = :email", [email])
@@ -656,13 +657,14 @@ def distinct_counties():
     # Attempt connection to Oracle database.
     try:
         connection = oracledb.connect(dsn = dsn)
-        print("Connected to database")
+        print("Connected to database distinct counties")
     except:
         print("Was not able to connect to database")
+        print(oracledb.connect(dsn = dsn))
 
     cur = connection.cursor()
 
-    cur.execute("select DISTINCT(county) from Business")
+    cur.execute("SELECT DISTINCT(b.county) from Business b join items i on i.bID = b.id")
 
     counties = cur.fetchall()
 
@@ -679,7 +681,7 @@ def distinct_business_names():
 
     cur = connection.cursor()
 
-    cur.execute("select DISTINCT(name) from Business")
+    cur.execute("SELECT DISTINCT(b.name) from Business b join items i on i.bID = b.id")
 
     names = cur.fetchall()
 
@@ -735,10 +737,14 @@ def filter_items(categories, counties, business_names,
         categories = ["Food", "Clothing", "Medicine", "Toiletries", "Misc"]
 
     if len(counties) == 0:
-        counties = [county[0] for county in distinct_counties()]
+        cur.execute("SELECT DISTINCT(b.county) from Business b join items i on i.bID = b.id")
+        all_counties = cur.fetchall()
+        counties = [county[0] for county in all_counties]
 
     if len(business_names) == 0:
-        business_names = [business[0] for business in distinct_business_names()]
+        cur.execute("SELECT DISTINCT(b.name) from Business b join items i on i.bID = b.id")
+        all_businesses = cur.fetchall()
+        business_names = [business[0] for business in all_businesses]
 
     bind_value_length = 0
 
@@ -890,5 +896,6 @@ if __name__ == "__main__":
 
     # for row in return_all_items("DESC", "DESC"):
     #     print(row)
-    for row in filter_items(["Food", "Misc"], [], [], 0, 100, "", "Price", 'DESC'):
+    for row in filter_items([], [], [], 0, 1000, "", "Price", 'ASC'):
         print(row)
+    
