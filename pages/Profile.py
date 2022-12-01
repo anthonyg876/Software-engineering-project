@@ -208,6 +208,9 @@ def save_edits(updated_info):
     if "" in updated_info.values():
         return "Fill out every input box"
 
+    if len(updated_info.keys()) == 0:
+        return "No update criteria selected."
+
     for k, v in updated_info.items():
 
         if k == "Business Name":
