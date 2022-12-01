@@ -723,7 +723,7 @@ def distinct_counties():
 
     cur = connection.cursor()
 
-    cur.execute("SELECT DISTINCT(b.county) from Business b join items i on i.bID = b.id")
+    cur.execute("SELECT DISTINCT(b.county) from Business b join items i on i.bID = b.id ORDER BY Lower(b.county) ASC")
 
     counties = cur.fetchall()
 
@@ -740,7 +740,7 @@ def distinct_business_names():
 
     cur = connection.cursor()
 
-    cur.execute("SELECT DISTINCT(b.name) from Business b join items i on i.bID = b.id")
+    cur.execute("SELECT DISTINCT(b.name) from Business b join items i on i.bID = b.id ORDER BY Lower(b.name) ASC")
 
     names = cur.fetchall()
 
