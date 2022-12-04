@@ -151,7 +151,7 @@ def filter_interface():
 
     max_item_price = math.ceil(db.max_price())
 
-    price = st.slider("Listings price", value = (0, max_item_price), step = 1)
+    price = st.slider("Listings price ($)", value = (0, max_item_price), step = 1)
 
     filter_dict["price"] = price
 
