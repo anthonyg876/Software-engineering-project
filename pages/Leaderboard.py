@@ -12,7 +12,12 @@ st.title("Leaderboard")
 
 ids = db.distinct_business_ids()
 
-number_names = st.slider("Number of Businesses", min_value=1, max_value=len(ids))
+num_ids = len(ids)
+
+if num_ids < 2:
+    num_ids = 2
+
+number_names = st.slider("Number of Businesses", min_value=1, max_value=num_ids)
 
 businesses = db.displayLeaderboard(number_names)
 

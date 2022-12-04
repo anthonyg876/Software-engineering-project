@@ -778,6 +778,9 @@ def max_price():
 
     max_price = cur.fetchall()
 
+    if max_price[0][0] is None:
+        return 10
+
     return max_price[0][0]
 
 
