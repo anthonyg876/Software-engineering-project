@@ -12,7 +12,7 @@ dsn = f'{username}/{userpwd}@{host}:{port}/{service_name}'
 salt = "HAPM4"
 
 # Helper functions for project
-def hashCode(code: str) -> str:
+def hashCode(code: str):
     code = code + salt
     hashed = hashlib.md5(code.encode())
     # print("Hashed Password is: " + hashed)
@@ -258,8 +258,6 @@ def returnUserType(email: str):
     # Check the user's income
     cur.execute("select income from participants where email = :email", [email])
     income = cur.fetchall() 
-    #print("PRINTING INCOME:")
-    #print(income)
     if (income[0][0] == -1):
         #print("User with email does not exist")
         return "Seller"
@@ -434,9 +432,8 @@ def updateParticipantsFirstName(email: str, firstName: str) -> str:
     try:
         cur.execute("update participants set firstName = :firstName where email = :email", [firstName, email])
         connection.commit()
-        output = "Updated participants"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants information.")
     connection.close()
 
 def updateParticipantsLastName(email: str, lastName: str) -> str:
@@ -450,9 +447,8 @@ def updateParticipantsLastName(email: str, lastName: str) -> str:
     try:
         cur.execute("update participants set lastName = :lastName where email = :email", [lastName, email])
         connection.commit()
-        output = "Updated participants"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants.")
     connection.close()
 
 def updateParticipantsIncome(email: str, income: int) -> str:
@@ -466,9 +462,9 @@ def updateParticipantsIncome(email: str, income: int) -> str:
     try:
         cur.execute("update participants set income = :income where email = :email", [income, email])
         connection.commit()
-        output = "Updated participants"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants.")
+
     connection.close()
 
 def updateParticipantsPassword(email: str, password: str) -> str:
@@ -482,9 +478,8 @@ def updateParticipantsPassword(email: str, password: str) -> str:
     try:
         cur.execute("update participants set password = :password where email = :email", [password, email])
         connection.commit()
-        output = "Updated participants"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants.")
     connection.close()
 
 def updateBusinessName(id: int, name: str) -> str:
@@ -498,9 +493,8 @@ def updateBusinessName(id: int, name: str) -> str:
     try:
         cur.execute("update business set name = :name where id = :id", [name, id])
         connection.commit()
-        output = "Updated business"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants.")
     connection.close()
 
 def updateBusinessPassword(id: int, password: str) -> str:
@@ -514,9 +508,8 @@ def updateBusinessPassword(id: int, password: str) -> str:
     try:
         cur.execute("update business set password = :password where id = :id", [password, id])
         connection.commit()
-        output = "Updated business"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants.")
     connection.close()
 
 def updateBusinessAddress(id: int, address: str) -> str:
@@ -530,9 +523,8 @@ def updateBusinessAddress(id: int, address: str) -> str:
     try:
         cur.execute("update business set address = :address where id = :id", [address, id])
         connection.commit()
-        output = "Updated business"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants.")
     connection.close()
 
 def updateBusinessCounty(id: int, county: str) -> str:
@@ -546,9 +538,8 @@ def updateBusinessCounty(id: int, county: str) -> str:
     try:
         cur.execute("update business set county = :county where id = :id", [county, id])
         connection.commit()
-        output = "Updated business"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants.")
     connection.close()
 
 def updateBusinessPhoneNumber(id: int, phone_Number: str) -> str:
@@ -562,9 +553,8 @@ def updateBusinessPhoneNumber(id: int, phone_Number: str) -> str:
     try:
         cur.execute("update business set phone_Number = :phone_Number where id = :id", [phone_Number, id])
         connection.commit()
-        output = "Updated business"
     except:
-        output = "Unsuccessful"
+        print("Could not update participants.")
     connection.close()
 
 def deleteItems(name: str, bid: int) -> str:
@@ -696,7 +686,6 @@ def find_item(name: str, bid: int) -> str:
         return "Item not found"
 
     connection.close()  
-
     return "Successful"
 
 def displayLeaderboard(topRows: int):
@@ -895,66 +884,6 @@ def filter_items(categories, counties, business_names,
     return items
 
 if __name__ == "__main__":
-    #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
-    #addParticipants("buyer@gmail.com", "buyer", "buyer", 22222, "pass1")
-    #addParticipants("seller@gmail.com", "seller", "seller", -1, "pass1")
-    #Returning business id, based on email
-    #deleteParticipant("realNewEmail@RealNew.com")  
-    #deleteParticipant("ag@gamil.com")   
-    #addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")
-    #updateParticipants("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword")
-    #updateEmail("ag@gamil.com", "newFirstName", "newLastName",911911,"newPassword","realNewEmail@RealNew.com")
-    #deleteParticipant("realNewEmail@RealNew.com")
-    #addBusiness("seller@gmail.com", 99, "sellerMart", "pass1", "address2", "33612", 123456789)
-    #updateBusiness(1, "NEwBusiness", "NEwpass1", "Newaddress1", "33615", 00000000)
-    #print(deleteBusiness(5))
-    #print(updateParticipantsFirstName("mk@gmail.com","RealNewNEWMatthew"))
-    #print(updateParticipantsLastName("mk@gmail.com","REalNewKerekes"))
-    #print(updateParticipantsIncome("mk@gmail.com",1000000))
-    #print(updateParticipantsPassword("mk@gmail.com","NewPass"))
-    # addParticipants("ag@gamil.com", "Anthony", "Gravier", 85000, "boof")\
-    #print(updateBusinessName(5, "REalNewBusiness"))
-    #print(addBusiness(2, "Walmart", "password1", "100 Gainesville Road", "Sarasota County", 7271111111))
-    #print(addItem("t-shirt", "clothing", 1.00, 10.00, 10, 2))
-    #updateBusinessAddress(2, "newaddress")
-    #updateBusinessName(2, "Walmart2")
-    #updateBusinessPassword(2, "newPass")
-    #updateBusinessCounty(2, "NewCounty")
-    #updateBusinessPhoneNumber(2, 9999999)
-    #updateParticipantsFirstName("hantetst@gmail.com","newFirst")
-    #updateParticipantsLastName("hantetst@gmail.com","newLast")
-    #updateParticipantsIncome("hantetst@gmail.com",5555)
-    #updateParticipantsPassword("hantetst@gmail.com","newPAss")
-    #addParticipants("han2@han.com", "han","lee",5555,"pass")
-    #addBusiness("han2@han.com", 78, "hanNewBusiness", "HanNewPass", "myNewYard", "myCNewounty", 333444)
-    #deleteBusiness(5)
-    #addItem("tampon", "misc", 33, 50, 10, 5)
-    #addItem("cigar", "misc", 10, 20, 10, 5)
-    #deleteItems("tampon", 5) 
-    #print(deleteBusiness(5))
-    # Testing out selecting items
-    #updateItemsCategory("NewNew", "tampon", 5)
-    #updateItemsPostPrice(999, "tampon", 5)
-    #updateItemsOriginalPrice(9999, "tampon", 5)
-    #updateItemsQuantity(999, "tampon", 5)
-    #print("TEST PRINTING: ")
-    #print(verifyLogin("ag@gamil.com","boof"))
-    #print("TEST PRINTING for returnBusinessID: ")
-    #print(returnBusinessID("ag@gamil.com"))
-    #print("TEST PRINTING, BUYER or SELLER: ")
-    #print(returnUserType("ag@gamil.com"))
-    #print(returnUserType("buyer@gmail.com"))
-    #print(returnUserType("seller@gmail.com"))
-    # print("TEST PRINTING, returnBusinessInfo: ")
-    # print(returnBusinessInfo("ag@gamil.com"))
-    # print("Participants")
-    # addParticipants("ag1941@gmail.com", "Anthony", "Bologni", 25, "cbd123")
-
-    # categories = ["Food", "Clothing", "Medicine"]
-    # counties = []
-
-    # for row in return_all_items("DESC", "DESC"):
-    #     print(row)
     for row in filter_items([], [], [], 0, 1000, "", "Price", 'ASC'):
         print(row)
     
